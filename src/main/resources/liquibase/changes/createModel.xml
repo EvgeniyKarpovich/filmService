@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="model_country-1" author="karpovich.e">
+        <sql>
+            INSERT INTO COUNTRIES ( name)
+            VALUES
+            ('Belarusian'),
+            ('Sweden'),
+            ('Australia');
+        </sql>
+    </changeSet>
+
+    <changeSet id="model-actors-1" author="karpovich.e">
+        <sql>
+            INSERT INTO Actors (name, lastname, date_of_birth, country_id, height, awards)
+            VALUES ('Leonardo', 'DiCaprio', '1974-11-11T18:34:51.464+00:00', '2', '184',
+            'GOLDEN_LION,CESAR,GOLDEN_GLOBE'),
+            ('Brad', 'Pit', '1965-09-12T18:34:51.464+00:00', '1', '178', 'GOLDEN_PALM_BRUNCH,GOLDEN_TIGER,GOLDEN_MASK'),
+            ('Tom', 'Cruise', '1963-04-09T18:34:51.464+00:00', '3', '168', 'GOLDEN_LION,GOLDEN_GLOBE')
+        </sql>
+    </changeSet>
+
+    <changeSet id="model-directors-1" author="karpovich.e">
+        <sql>
+            INSERT INTO Directors (name, lastName, date_of_birth, country_id)
+            VALUES ('Steven', 'Spielberg', '1958-08-08T18:34:51.464+00:00', '2'),
+            ('Martin', 'Scorsese', '1971-04-10T18:34:51.464+00:00', '3'),
+            ('Quentin', 'Tarantino', '1966-05-11T18:34:51.464+00:00', '1')
+        </sql>
+    </changeSet>
+
+    <changeSet id="model-musics-1" author="karpovich.e">
+        <sql>
+            INSERT INTO Musics (name, author, duration_In_Minutes, genre)
+            VALUES ('Run', 'Tiesto', '3', 'ELECTRONIC'),
+            ('Santoluchia', 'Timati', '4', 'RAP'),
+            ('Run Bitch', 'TuPuck', '5', 'BLUES')
+        </sql>
+    </changeSet>
+
+    <changeSet id="model_film-1" author="karpovich.e">
+        <sql>
+            INSERT INTO Films (name, genre , release_date, director_id, duration_in_minutes, rating_IMDB, country_id,
+            description, age_Limit)
+            VALUES ('21', 'HORROR', '1999-04-10T18:34:51.464+00:00', '1','179', '7.8', '2', 'Casino', '18'),
+            ('Pobeg iz shoushenka', 'ROMANCE', '2008-04-10T18:34:51.464+00:00', '3', '145', '6.8', '3', 'Cep calm',
+            '16'),
+            ('Batman','DRAMA', '2016-04-10T18:34:51.464+00:00', 2, '188', '5.9', '2', 'Dobro pobegdaet zlo', '12')
+        </sql>
+    </changeSet>
+
+    <changeSet id="model-actor-film-1" author="karpovich.e">
+        <sql>
+            INSERT INTO ACTORS_FILMS (actor_id, film_id)
+            VALUES ('1', '1'),
+            ('2', '2'),
+            ('3', '2'),
+            ('1', '2')
+        </sql>
+    </changeSet>
+
+    <changeSet id="model-music-film-1" author="karpovich.e">
+        <sql>
+            INSERT INTO MUSICS_FILMS (music_id, film_id)
+            VALUES ('1', '1'),
+            ('2', '2'),
+            ('3', '2')
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

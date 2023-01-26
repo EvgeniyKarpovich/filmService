@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="actors_film-1" author="karpovich.e">
+        <sql>
+            CREATE TABLE ACTOR_FILM(
+            actor_id integer NOT NULL,
+            film_id integer NOT NULL,
+            PRIMARY KEY (actor_id, film_id),
+            CONSTRAINT fk_actor FOREIGN KEY (actor_id) references ACTORS (id) ON UPDATE CASCADE ON DELETE CASCADE,
+            CONSTRAINT fk_film FOREIGN KEY (film_id) references FILMS (id) ON UPDATE CASCADE
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
