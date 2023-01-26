@@ -36,7 +36,7 @@ public class DirectorModel {
     @JoinColumn(name = "country_id")
     private CountryModel placeOfBirth;
 
-    @OneToMany(mappedBy = "directors")
+    @ManyToMany(mappedBy = "directors", fetch = FetchType.LAZY)
     private List<FilmModel> films = new ArrayList<>();
 
     @CreatedDate
