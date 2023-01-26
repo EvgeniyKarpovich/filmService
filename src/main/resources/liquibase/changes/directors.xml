@@ -14,7 +14,7 @@
             country_id integer NOT NULL,
             date_of_creation timestamp WITH time ZONE DEFAULT CURRENT_DATE,
             date_of_change timestamp WITH time ZONE DEFAULT CURRENT_DATE,
-            CONSTRAINT ct_director UNIQUE(name, date_of_birth),
+            CONSTRAINT ct_director UNIQUE(name),
             CONSTRAINT fk_country FOREIGN KEY (country_id) REFERENCES COUNTRIES(id)
             );
         </sql>

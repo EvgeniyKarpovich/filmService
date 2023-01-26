@@ -5,14 +5,15 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-    <changeSet id="actor_film-1" author="karpovich.e">
+
+    <changeSet id="career-1" author="karpovich.e">
         <sql>
-            CREATE TABLE ACTOR_FILM(
-            actor_id integer NOT NULL,
-            film_id integer NOT NULL,
-            PRIMARY KEY (actor_id, film_id),
-            CONSTRAINT fk_actor FOREIGN KEY (actor_id) references ACTORS (id) ON UPDATE CASCADE ON DELETE CASCADE,
-            CONSTRAINT fk_film FOREIGN KEY (film_id) references FILMS (id) ON UPDATE CASCADE
+            CREATE TABLE CAREERS(
+            id serial PRIMARY KEY,
+            name varchar(30) NOT NULL,
+            date_of_creation timestamp WITH time ZONE DEFAULT CURRENT_DATE,
+            date_of_change timestamp WITH time ZONE DEFAULT CURRENT_DATE,
+            CONSTRAINT ct_career UNIQUE(name)
             );
         </sql>
     </changeSet>

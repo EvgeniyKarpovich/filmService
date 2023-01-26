@@ -10,7 +10,7 @@
             CREATE TABLE DIRECTOR_FILM(
             director_id integer NOT NULL,
             film_id integer NOT NULL,
-            PRIMARY KEY (actor_id, film_id),
+            PRIMARY KEY (director_id, film_id),
             CONSTRAINT fk_director FOREIGN KEY (director_id) references DIRECTORS (id) ON UPDATE CASCADE ON DELETE CASCADE,
             CONSTRAINT fk_film FOREIGN KEY (film_id) references FILMS (id) ON UPDATE CASCADE
             );

@@ -6,11 +6,12 @@
     <include file="changes/countries.xml" relativeToChangelogFile="true"/>
     <include file="changes/actors.xml" relativeToChangelogFile="true"/>
     <include file="changes/genres.xml" relativeToChangelogFile="true"/>
+    <include file="changes/directors.xml" relativeToChangelogFile="true"/>
+    <include file="changes/films.xml" relativeToChangelogFile="true"/>
     <include file="changes/actorFilm.xml" relativeToChangelogFile="true"/>
     <include file="changes/directorFilm.xml" relativeToChangelogFile="true"/>
     <include file="changes/genreFilm.xml" relativeToChangelogFile="true"/>
-    <include file="changes/directors.xml" relativeToChangelogFile="true"/>
-    <include file="changes/films.xml" relativeToChangelogFile="true"/>
+    <include file="changes/careers.xml" relativeToChangelogFile="true"/>
     <include file="changes/createModel.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

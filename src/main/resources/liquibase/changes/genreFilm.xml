@@ -10,7 +10,7 @@
             CREATE TABLE GENRE_FILM(
             genre_id integer NOT NULL,
             film_id integer NOT NULL,
-            PRIMARY KEY (actor_id, film_id),
+            PRIMARY KEY (genre_id, film_id),
             CONSTRAINT fk_genre FOREIGN KEY (genre_id) references DIRECTORS (id) ON UPDATE CASCADE ON DELETE CASCADE,
             CONSTRAINT fk_film FOREIGN KEY (film_id) references FILMS (id) ON UPDATE CASCADE
             );
