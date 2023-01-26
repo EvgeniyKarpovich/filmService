@@ -79,7 +79,7 @@ public class CountryService {
         } else {
             throw new NotFoundModelException(String.format(" the country with id = %s was not found", id));
         }
-        log.info("IN deleteById - Country with id = {} deleted", id);
+        log.info("method deleteById - the country with id = {} deleted", id);
     }
 
     private void validateAlreadyExists(CountryDto countryDto, Long id) {
@@ -97,11 +97,11 @@ public class CountryService {
         return countryMapper.mapListDtoFromListModel(countriesFilterByName);
     }
 
-    public CountryModel findByIdWhichWillReturnModel(Long id) {
-        Optional<CountryModel> optionalCountry = countryRepository.findById(id);
-        return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
-    }
+//    public CountryModel findByIdWhichWillReturnModel(Long id) {
+//        Optional<CountryModel> optionalCountry = countryRepository.findById(id);
+//        return optionalCountry.orElseThrow(
+//                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
+//    }
 
     private List<CountryModel> findByName(List<CountryModel> models, String name) {
         return models.stream()
