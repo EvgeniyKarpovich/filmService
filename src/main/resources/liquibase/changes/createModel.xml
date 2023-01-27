@@ -57,9 +57,7 @@
         <sql>
             INSERT INTO Films (name, rating_IMDB, tag_line, release_date, country_id, age_Limit, duration_in_minutes,
             description)
-            VALUES ('Petlya vremeni', '7.7', 'Davai taschi', '1999-04-10T18:34:51.464+00:00', '1','18+', '154', 'Dobrui
-            black
-            Jack'),
+            VALUES ('Petlya vremeni', '7.7', 'Davai taschi', '1999-04-10T18:34:51.464+00:00', '1','18+', '154', 'Dobrui black Jack'),
             ('Pobeg iz shoushenka', '8.0', 'Vsegda mogno sbegat iz turmu', '2008-04-10T18:34:51.464+00:00', '3', '16+',
             '184', 'Cep calm'),
             ('Batman', '8.5', 'Letuchaya mush pobegdaet dage lva', '2016-04-10T18:34:51.464+00:00', 2, '21+', '142',
@@ -69,17 +67,16 @@
 
     <changeSet id="model-actor-film-1" author="karpovich.e">
         <sql>
-            INSERT INTO ACTOR_FILM (actor_id, film_id)
+            INSERT INTO ACTOR_FILM (film_id, actor_id)
             VALUES ('1', '1'),
             ('2', '2'),
-            ('3', '2'),
-            ('1', '2')
+            ('3', '2')
         </sql>
     </changeSet>
 
     <changeSet id="model-director-film-1" author="karpovich.e">
         <sql>
-            INSERT INTO DIRECTOR_FILM (director_id, film_id)
+            INSERT INTO DIRECTOR_FILM (film_id, director_id)
             VALUES ('1', '3'),
             ('2', '2'),
             ('3', '2')
@@ -88,7 +85,7 @@
 
     <changeSet id="model-genre-film-1" author="karpovich.e">
         <sql>
-            INSERT INTO GENRE_FILM (genre_id, film_id)
+            INSERT INTO GENRE_FILM (film_id, genre_id)
             VALUES ('1', '2'),
             ('2', '3'),
             ('3', '2')
