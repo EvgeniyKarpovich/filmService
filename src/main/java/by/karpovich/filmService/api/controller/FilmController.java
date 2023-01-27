@@ -1,8 +1,6 @@
 package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.FilmDto;
-import by.karpovich.filmService.jpa.repository.FilmRepository;
-import by.karpovich.filmService.mapping.FilmMapper;
 import by.karpovich.filmService.service.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +15,6 @@ public class FilmController {
 
     @Autowired
     private FilmService filmService;
-    @Autowired
-    private FilmRepository filmRepository;
-    @Autowired
-    private FilmMapper filmMapper;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {

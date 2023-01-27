@@ -83,7 +83,7 @@ public class FilmMapper {
         return model;
     }
 
-    public List<FilmDto> mapListFtoFromListModel(List<FilmModel> modelList) {
+    public List<FilmDto> mapListDtoFromListModel(List<FilmModel> modelList) {
         if (modelList == null) {
             return null;
         }

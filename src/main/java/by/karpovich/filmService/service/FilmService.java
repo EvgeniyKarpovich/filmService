@@ -35,6 +35,7 @@ public class FilmService {
         FilmModel filmModel = optionalFilmModel.orElseThrow(
                 () -> new NotFoundModelException(String.format("the film with id = %s was not found", id)));
         log.info("method findById - the film was founded with id = {} ", filmModel.getId());
+
         return filmMapper.mapDtoFromModel(filmModel);
     }
 
@@ -52,10 +53,10 @@ public class FilmService {
         Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmDto> countryDtoList = filmMapper.mapListFtoFromListModel(content);
+        List<FilmDto> filmDtoList = filmMapper.mapListDtoFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("tutorials", countryDtoList);
+        response.put("tutorials", filmDtoList);
         response.put("currentPage", filmModelPageModelPage.getNumber());
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
@@ -68,6 +69,7 @@ public class FilmService {
         FilmModel filmModel = filmMapper.mapModelFromDto(filmDto);
         filmModel.setId(id);
         FilmModel save = filmRepository.save(filmModel);
+
         log.info("method update - the film {} was updated", filmDto.getName());
 
         return filmMapper.mapDtoFromModel(save);
@@ -89,8 +91,9 @@ public class FilmService {
         }
     }
 
-    private FilmModel findByIdWhichWillReturnModel(Long id) {
+    public FilmModel findByIdWhichWillReturnModel(Long id) {
         Optional<FilmModel> optionalCountry = filmRepository.findById(id);
+
         return optionalCountry.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
     }

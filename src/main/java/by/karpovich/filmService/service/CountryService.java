@@ -90,18 +90,17 @@ public class CountryService {
     }
 
     public List<CountryDto> findByName(String name) {
-
         List<CountryModel> countryModels = countryRepository.findAll();
         List<CountryModel> countriesFilterByName = findByName(countryModels, name);
 
         return countryMapper.mapListDtoFromListModel(countriesFilterByName);
     }
 
-//    public CountryModel findByIdWhichWillReturnModel(Long id) {
-//        Optional<CountryModel> optionalCountry = countryRepository.findById(id);
-//        return optionalCountry.orElseThrow(
-//                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
-//    }
+    public CountryModel findByIdWhichWillReturnModel(Long id) {
+        Optional<CountryModel> optionalCountry = countryRepository.findById(id);
+        return optionalCountry.orElseThrow(
+                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
+    }
 
     private List<CountryModel> findByName(List<CountryModel> models, String name) {
         return models.stream()
