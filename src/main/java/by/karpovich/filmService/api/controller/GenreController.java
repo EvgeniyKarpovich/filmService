@@ -28,9 +28,9 @@ public class GenreController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody GenreDto dto) {
-        GenreDto save = genresService.save(dto);
+        GenreDto savedDto = genresService.save(dto);
 
-        if (save == null) {
+        if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the genre was saved successfully", HttpStatus.OK);
@@ -39,10 +39,10 @@ public class GenreController {
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
-        Map<String, Object> genreDto = genresService.findAll(page, size);
+        Map<String, Object> listGenreDto = genresService.findAll(page, size);
 
-        if (genreDto != null) {
-            return new ResponseEntity<>(genreDto, HttpStatus.OK);
+        if (listGenreDto != null) {
+            return new ResponseEntity<>(listGenreDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -51,9 +51,9 @@ public class GenreController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody GenreDto dto,
                                     @PathVariable("id") Long id) {
-        GenreDto update = genresService.update(dto, id);
+        GenreDto updatedDto = genresService.update(dto, id);
 
-        if (update == null) {
+        if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the genre was updated successfully", HttpStatus.OK);

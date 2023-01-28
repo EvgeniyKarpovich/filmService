@@ -1,7 +1,6 @@
 package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.CountryDto;
-import by.karpovich.filmService.jpa.repository.CountryRepository;
 import by.karpovich.filmService.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,47 +16,45 @@ public class CountryController {
 
     @Autowired
     private CountryService countryService;
-    @Autowired
-    private CountryRepository countryRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-        CountryDto byId = countryService.findById(id);
+        CountryDto dto = countryService.findById(id);
 
-        if (byId == null) {
+        if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(byId, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "10") int size) {
-        Map<String, Object> countriesDto = countryService.findAll(page, size);
+        Map<String, Object> listDto = countryService.findAll(page, size);
 
-        if (countriesDto != null) {
-            return new ResponseEntity<>(countriesDto, HttpStatus.OK);
+        if (listDto != null) {
+            return new ResponseEntity<>(listDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody CountryDto countryDto) {
-        CountryDto save = countryService.save(countryDto);
+    public ResponseEntity<?> save(@RequestBody CountryDto dto) {
+        CountryDto savedDto = countryService.save(dto);
 
-        if (save == null) {
+        if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the country was saved successfully", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody CountryDto countryDto,
+    public ResponseEntity<?> update(@RequestBody CountryDto dto,
                                     @PathVariable("id") Long id) {
-        CountryDto update = countryService.update(id, countryDto);
+        CountryDto updatedDto = countryService.update(id, dto);
 
-        if (update == null) {
+        if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the country was updated successfully", HttpStatus.OK);
@@ -72,10 +69,10 @@ public class CountryController {
 
     @GetMapping("/name/{name}")
     public ResponseEntity<?> findByName(@PathVariable("name") String name) {
-        List<CountryDto> countryByName = countryService.findByName(name);
+        List<CountryDto> listCountryByName = countryService.findByName(name);
 
-        if (countryByName != null) {
-            return new ResponseEntity<>(countryByName, HttpStatus.OK);
+        if (listCountryByName != null) {
+            return new ResponseEntity<>(listCountryByName, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

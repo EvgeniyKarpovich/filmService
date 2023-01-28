@@ -18,19 +18,19 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-        FilmDto filmById = filmService.findById(id);
+        FilmDto dto = filmService.findById(id);
 
-        if (filmById == null) {
+        if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(filmById, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody FilmDto filmDto) {
-        FilmDto save = filmService.save(filmDto);
+    public ResponseEntity<?> save(@RequestBody FilmDto dto) {
+        FilmDto savedDto = filmService.save(dto);
 
-        if (save == null) {
+        if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the film was saved successfully", HttpStatus.OK);
@@ -39,21 +39,21 @@ public class FilmController {
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
-        Map<String, Object> filmDto = filmService.findAll(page, size);
+        Map<String, Object> listFilmDto = filmService.findAll(page, size);
 
-        if (filmDto != null) {
-            return new ResponseEntity<>(filmDto, HttpStatus.OK);
+        if (listFilmDto != null) {
+            return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody FilmDto filmDto,
+    public ResponseEntity<?> update(@RequestBody FilmDto dto,
                                     @PathVariable("id") Long id) {
-        FilmDto update = filmService.update(filmDto, id);
+        FilmDto updatedDto = filmService.update(dto, id);
 
-        if (update == null) {
+        if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the film was updated successfully", HttpStatus.OK);

@@ -70,44 +70,45 @@ public class ActorMapper {
         }
 
         List<ActorDto> actorDtoList = new ArrayList<>();
-        for (ActorModel actorModel : modelList) {
-            actorDtoList.add(mapDtoFromModel(actorModel));
+
+        for (ActorModel model : modelList) {
+            actorDtoList.add(mapDtoFromModel(model));
         }
 
         return actorDtoList;
     }
 
     private List<FilmModel> findListFilmsByActorId(List<Long> listFilmId) {
-        List<FilmModel> filmModelList = new ArrayList<>();
+        List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
             FilmModel model = findByIdWhichWillReturnModel(id);
-            filmModelList.add(model);
+            modelList.add(model);
         }
 
-        return filmModelList;
+        return modelList;
     }
 
-    private Long findCountryId(ActorModel actorModel) {
-        Optional<ActorModel> model = actorRepository.findById(actorModel.getId());
+    private Long findCountryId(ActorModel model) {
+        Optional<ActorModel> modelById = actorRepository.findById(model.getId());
 
-        return model.get().getPlaceOfBirth().getId();
+        return modelById.get().getPlaceOfBirth().getId();
     }
 
     private List<Long> findFilmIdFromActorModel(Long id) {
-        Optional<ActorModel> byId = actorRepository.findById(id);
-        List<FilmModel> films = byId.get().getFilms();
-        List<Long> collect = films.stream()
+        Optional<ActorModel> model = actorRepository.findById(id);
+
+        List<FilmModel> films = model.get().getFilms();
+
+        return films.stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     public FilmModel findByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
+        Optional<FilmModel> model = filmRepository.findById(id);
 
-        return optionalCountry.orElseThrow(
+        return model.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
     }
 }

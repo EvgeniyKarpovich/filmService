@@ -18,19 +18,19 @@ public class ActorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-        ActorDto actorDto = actorService.findById(id);
+        ActorDto dto = actorService.findById(id);
 
-        if (actorDto == null) {
+        if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(actorDto, HttpStatus.OK);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody ActorDto dto) {
-        ActorDto save = actorService.save(dto);
+        ActorDto savedDto = actorService.save(dto);
 
-        if (save == null) {
+        if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the actor was saved successfully", HttpStatus.OK);
@@ -39,10 +39,10 @@ public class ActorController {
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
-        Map<String, Object> actorDto = actorService.findAll(page, size);
+        Map<String, Object> listDto = actorService.findAll(page, size);
 
-        if (actorDto != null) {
-            return new ResponseEntity<>(actorDto, HttpStatus.OK);
+        if (listDto != null) {
+            return new ResponseEntity<>(listDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -51,9 +51,9 @@ public class ActorController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody ActorDto dto,
                                     @PathVariable("id") Long id) {
-        ActorDto update = actorService.update(dto, id);
+        ActorDto updatedDto = actorService.update(dto, id);
 
-        if (update == null) {
+        if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the actor was updated successfully", HttpStatus.OK);

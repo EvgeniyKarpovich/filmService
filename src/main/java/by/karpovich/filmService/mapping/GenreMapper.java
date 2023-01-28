@@ -64,12 +64,12 @@ public class GenreMapper {
 
     private List<Long> findFilmIdFromGenreModel(Long id) {
         Optional<GenreModel> byId = genreRepository.findById(id);
+
         List<FilmModel> films = byId.get().getFilms();
-        List<Long> collect = films.stream()
+
+        return films.stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     private List<FilmModel> findListFilmsByGenreId(List<Long> listFilmId) {

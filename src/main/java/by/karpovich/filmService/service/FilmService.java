@@ -31,8 +31,9 @@ public class FilmService {
     private FilmMapper filmMapper;
 
     public FilmDto findById(Long id) {
-        Optional<FilmModel> optionalFilmModel = filmRepository.findById(id);
-        FilmModel filmModel = optionalFilmModel.orElseThrow(
+        Optional<FilmModel> model = filmRepository.findById(id);
+
+        FilmModel filmModel = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the film with id = %s was not found", id)));
         log.info("method findById - the film was founded with id = {} ", filmModel.getId());
 
@@ -41,8 +42,10 @@ public class FilmService {
 
     public FilmDto save(FilmDto filmDto) {
         validateAlreadyExists(filmDto, null);
+
         FilmModel filmModel = filmMapper.mapModelFromDto(filmDto);
         FilmModel save = filmRepository.save(filmModel);
+
         log.info("method save - the film with name '{}' was saved", filmDto.getName());
 
         return filmMapper.mapDtoFromModel(save);
@@ -64,13 +67,14 @@ public class FilmService {
         return response;
     }
 
-    public FilmDto update(FilmDto filmDto, Long id) {
-        validateAlreadyExists(filmDto, id);
-        FilmModel filmModel = filmMapper.mapModelFromDto(filmDto);
+    public FilmDto update(FilmDto dto, Long id) {
+        validateAlreadyExists(dto, id);
+
+        FilmModel filmModel = filmMapper.mapModelFromDto(dto);
         filmModel.setId(id);
         FilmModel save = filmRepository.save(filmModel);
 
-        log.info("method update - the film {} was updated", filmDto.getName());
+        log.info("method update - the film {} was updated", dto.getName());
 
         return filmMapper.mapDtoFromModel(save);
     }

@@ -88,47 +88,49 @@ public class FilmMapper {
             return null;
         }
 
-        List<FilmDto> filmDtoList = new ArrayList<>();
-        for (FilmModel filmModel : modelList) {
-            filmDtoList.add(mapDtoFromModel(filmModel));
+        List<FilmDto> listDto = new ArrayList<>();
+
+        for (FilmModel model : modelList) {
+            listDto.add(mapDtoFromModel(model));
         }
 
-        return filmDtoList;
+        return listDto;
     }
 
     private List<Long> findDirectorsIdFromFilmModel(Long id) {
-        Optional<FilmModel> byId = filmRepository.findById(id);
-        List<DirectorModel> directors = byId.get().getDirectors();
-        List<Long> collect = directors.stream()
+        Optional<FilmModel> model = filmRepository.findById(id);
+
+        List<DirectorModel> directors = model.get().getDirectors();
+
+        return directors.stream()
                 .map(DirectorModel::getId)
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     private List<Long> findGenresIdFromFilmModel(Long id) {
         Optional<FilmModel> byId = filmRepository.findById(id);
+
         List<GenreModel> genres = byId.get().getGenres();
-        List<Long> collect = genres.stream()
+
+        return genres.stream()
                 .map(GenreModel::getId)
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     private List<Long> findActorsIdFromModel(Long id) {
-        Optional<FilmModel> byId = filmRepository.findById(id);
-        List<ActorModel> actors = byId.get().getActors();
-        List<Long> collect = actors.stream()
+        Optional<FilmModel> model = filmRepository.findById(id);
+
+        List<ActorModel> actors = model.get().getActors();
+
+        return actors.stream()
                 .map(ActorModel::getId)
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     private Long findCountryId(FilmModel filmModel) {
-        Optional<FilmModel> filmById = filmRepository.findById(filmModel.getId());
-        return filmById.get().getCountry().getId();
+        Optional<FilmModel> model = filmRepository.findById(filmModel.getId());
+
+        return model.get().getCountry().getId();
     }
 
     private List<DirectorModel> findListDirectorByDirectorId(List<Long> listDirectorsId) {

@@ -31,19 +31,25 @@ public class CareerService {
     @Autowired
     private CareerMapper careerMapper;
 
-    public CareerDto save(CareerDto CareerDto) {
-        validateAlreadyExists(CareerDto, null);
-        CareerModel entity = careerMapper.mapModelFromDto(CareerDto);
+    public CareerDto save(CareerDto dto) {
+        validateAlreadyExists(dto, null);
+
+        CareerModel entity = careerMapper.mapModelFromDto(dto);
         CareerModel savedCareer = careerRepository.save(entity);
-        log.info("method save - the career with name '{}' was saved", CareerDto.getName());
+
+        log.info("method save - the career with name '{}' was saved", dto.getName());
+
         return careerMapper.mapDtoFromModel(savedCareer);
     }
 
     public CareerDto findById(Long id) {
         Optional<CareerModel> optionalCountry = careerRepository.findById(id);
+
         CareerModel careerModel = optionalCountry.orElseThrow(
                 () -> new NotFoundModelException(String.format("the career with id = %s was not found", id)));
+
         log.info("method findById - the career was founded with id = {} ", careerModel.getId());
+
         return careerMapper.mapDtoFromModel(careerModel);
     }
 
@@ -64,12 +70,15 @@ public class CareerService {
         return response;
     }
 
-    public CareerDto update(Long id, CareerDto CareerDto) {
-        validateAlreadyExists(CareerDto, id);
-        CareerModel career = careerMapper.mapModelFromDto(CareerDto);
+    public CareerDto update(Long id, CareerDto dto) {
+        validateAlreadyExists(dto, id);
+
+        CareerModel career = careerMapper.mapModelFromDto(dto);
         career.setId(id);
         CareerModel updated = careerRepository.save(career);
-        log.info("method update - the career {} was updated", CareerDto.getName());
+
+        log.info("method update - the career {} was updated", dto.getName());
+
         return careerMapper.mapDtoFromModel(updated);
     }
 
@@ -82,9 +91,10 @@ public class CareerService {
         log.info("method deleteById - career with id = {} deleted", id);
     }
 
-    private void validateAlreadyExists(CareerDto CareerDto, Long id) {
-        Optional<CareerModel> career = careerRepository.findByName(CareerDto.getName());
-        if (career.isPresent() && !career.get().getId().equals(id)) {
+    private void validateAlreadyExists(CareerDto dto, Long id) {
+        Optional<CareerModel> model = careerRepository.findByName(dto.getName());
+
+        if (model.isPresent() && !model.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the career with id = %s already exist", id));
         }
     }

@@ -28,9 +28,9 @@ public class DirectorController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody DirectorDto dto) {
-        DirectorDto save = directorService.save(dto);
+        DirectorDto savedDto = directorService.save(dto);
 
-        if (save == null) {
+        if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the director was saved successfully", HttpStatus.OK);
@@ -39,10 +39,10 @@ public class DirectorController {
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
-        Map<String, Object> directorDto = directorService.findAll(page, size);
+        Map<String, Object> listDirectorsDto = directorService.findAll(page, size);
 
-        if (directorDto != null) {
-            return new ResponseEntity<>(directorDto, HttpStatus.OK);
+        if (listDirectorsDto != null) {
+            return new ResponseEntity<>(listDirectorsDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -51,9 +51,9 @@ public class DirectorController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody DirectorDto dto,
                                     @PathVariable("id") Long id) {
-        DirectorDto update = directorService.update(dto, id);
+        DirectorDto updatedDto = directorService.update(dto, id);
 
-        if (update == null) {
+        if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("the director was updated successfully", HttpStatus.OK);

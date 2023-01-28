@@ -66,6 +66,7 @@ public class DirectorMapper {
         }
 
         List<DirectorDto> directorDtoList = new ArrayList<>();
+
         for (DirectorModel directorModel : modelList) {
             directorDtoList.add(mapDtoFromModel(directorModel));
         }
@@ -73,43 +74,44 @@ public class DirectorMapper {
         return directorDtoList;
     }
 
-    private Long findCountryId(DirectorModel directorModel) {
-        Optional<DirectorModel> model = directorRepository.findById(directorModel.getId());
+    private Long findCountryId(DirectorModel model) {
+        Optional<DirectorModel> modelById = directorRepository.findById(model.getId());
 
-        return model.get().getPlaceOfBirth().getId();
+        return modelById.get().getPlaceOfBirth().getId();
     }
 
     private List<Long> findFilmIdFromDirectorModel(Long id) {
-        Optional<DirectorModel> byId = directorRepository.findById(id);
-        List<FilmModel> films = byId.get().getFilms();
-        List<Long> collect = films.stream()
+        Optional<DirectorModel> model = directorRepository.findById(id);
+
+        List<FilmModel> listFilm = model.get().getFilms();
+
+        return listFilm.stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
-
-        return collect;
     }
 
     private List<FilmModel> findListFilmsByDirectorId(List<Long> listFilmId) {
-        List<FilmModel> filmModelList = new ArrayList<>();
+        List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
             FilmModel model = findFilmByIdWhichWillReturnModel(id);
-            filmModelList.add(model);
+            modelList.add(model);
         }
 
-        return filmModelList;
+        return modelList;
     }
 
     public CountryModel findByIdWhichWillReturnModel(Long id) {
-        Optional<CountryModel> optionalCountry = countryRepository.findById(id);
-        return optionalCountry.orElseThrow(
+        Optional<CountryModel> model = countryRepository.findById(id);
+
+        return model.orElseThrow(
                 () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
     }
 
     public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
+        Optional<FilmModel> model = filmRepository.findById(id);
 
-        return optionalCountry.orElseThrow(
+        return model.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
     }
 }

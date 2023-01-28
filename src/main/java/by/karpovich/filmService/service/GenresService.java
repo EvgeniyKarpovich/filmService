@@ -31,8 +31,8 @@ public class GenresService {
     private GenreMapper genreMapper;
 
     public GenreDto findById(Long id) {
-        Optional<GenreModel> genreModel = genreRepository.findById(id);
-        GenreModel genresModel = genreModel.orElseThrow(
+        Optional<GenreModel> model = genreRepository.findById(id);
+        GenreModel genresModel = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the genre with id = %s was not found", id)));
 
         log.info("method findById - the genre was founded with id = {} ", genresModel.getId());
@@ -44,11 +44,11 @@ public class GenresService {
         validateAlreadyExists(dto, null);
 
         GenreModel model = genreMapper.mapModelFromDto(dto);
-        GenreModel save = genreRepository.save(model);
+        GenreModel savedModel = genreRepository.save(model);
 
         log.info("method save - the genre with name '{}' was saved", dto.getName());
 
-        return genreMapper.mapDtoFromModel(save);
+        return genreMapper.mapDtoFromModel(savedModel);
     }
 
     public Map<String, Object> findAll(int page, int size) {
@@ -91,6 +91,7 @@ public class GenresService {
 
     private void validateAlreadyExists(GenreDto dto, Long id) {
         Optional<GenreModel> genreModel = genreRepository.findByName(dto.getName());
+
         if (genreModel.isPresent() && !genreModel.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the genre with id = %s already exist", id));
         }
@@ -98,6 +99,7 @@ public class GenresService {
 
     public GenreModel findByIdWhichWillReturnModel(Long id) {
         Optional<GenreModel> genreModel = genreRepository.findById(id);
+
         return genreModel.orElseThrow(
                 () -> new NotFoundModelException("the genre with ID = " + id + " was not found"));
     }

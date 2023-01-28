@@ -31,8 +31,9 @@ public class ActorService {
     private ActorMapper actorMapper;
 
     public ActorDto findById(Long id) {
-        Optional<ActorModel> optionalFilmModel = actorRepository.findById(id);
-        ActorModel actorModel = optionalFilmModel.orElseThrow(
+        Optional<ActorModel> model = actorRepository.findById(id);
+
+        ActorModel actorModel = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the actor with id = %s was not found", id)));
 
         log.info("method findById - the actor was founded with id = {} ", actorModel.getId());
@@ -90,16 +91,17 @@ public class ActorService {
     }
 
     private void validateAlreadyExists(ActorDto dto, Long id) {
-        Optional<ActorModel> actorModel = actorRepository.findByName(dto.getName());
-        if (actorModel.isPresent() && !actorModel.get().getId().equals(id)) {
+        Optional<ActorModel> model = actorRepository.findByName(dto.getName());
+
+        if (model.isPresent() && !model.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the actor with id = %s already exist", id));
         }
     }
 
     public ActorModel findByIdWhichWillReturnModel(Long id) {
-        Optional<ActorModel> actorModel = actorRepository.findById(id);
+        Optional<ActorModel> model = actorRepository.findById(id);
 
-        return actorModel.orElseThrow(
+        return model.orElseThrow(
                 () -> new NotFoundModelException("the actor with ID = " + id + " was not found"));
     }
 }

@@ -91,6 +91,7 @@ public class DirectorService {
 
     private void validateAlreadyExists(DirectorDto dto, Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findByName(dto.getName());
+
         if (directorModel.isPresent() && !directorModel.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the director with id = %s already exist", id));
         }
@@ -98,6 +99,7 @@ public class DirectorService {
 
     public DirectorModel findByIdWhichWillReturnModel(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
+
         return directorModel.orElseThrow(
                 () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
     }
