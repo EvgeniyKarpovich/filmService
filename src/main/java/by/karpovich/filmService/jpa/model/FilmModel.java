@@ -49,7 +49,7 @@ public class FilmModel {
     private List<DirectorModel> directors;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "film_genre",
+    @JoinTable(name = "genre_film",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
     private List<GenreModel> genres;
