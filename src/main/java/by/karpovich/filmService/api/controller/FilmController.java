@@ -2,6 +2,7 @@ package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.FilmDto;
 import by.karpovich.filmService.service.FilmService;
+import by.karpovich.filmService.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -34,21 +34,11 @@ public class FilmController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestPart FilmDto dto, @RequestPart("file")MultipartFile file) throws IOException {
-        if (file != null) {
-            File uploadDir = new File(uploadPath);
+    public ResponseEntity<?> save(@RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) throws IOException {
 
-            if (!uploadDir.exists()) {
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resulFileName = uuidFile + "." + file.getOriginalFilename();
-
-            file.transferTo(new File(uploadPath + "/" + resulFileName));
-
-            dto.setPoster(resulFileName);
-        }
-
+        String resulFileName = FileUploadUtil.generationFileName(file);
+        dto.setPoster(resulFileName);
+        FileUploadUtil.saveFile(resulFileName, file);
 
         FilmDto savedDto = filmService.save(dto);
 

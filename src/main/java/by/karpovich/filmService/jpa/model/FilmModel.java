@@ -79,5 +79,4 @@ public class FilmModel {
     @LastModifiedDate
     @Column(name = "date_of_change")
     private Instant dateOfChange;
-
 }

@@ -70,6 +70,7 @@ public class FilmMapper {
         FilmModel model = new FilmModel();
 
         model.setName(dto.getName());
+        model.setPoster(dto.getPoster());
         model.setRatingIMDB(dto.getRatingIMDB());
         model.setTagline(dto.getTagline());
         model.setReleaseDate(utils.mapInstantFromString(dto.getReleaseDate()));

@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class Utils {
 
-    private static final String PATTERN_FORMAT = "yyyy MMMM dd";
+    private static final String PATTERN_FORMAT = "dd MMMM yyyy";
 
     public String mapStringFromInstant(Instant instant) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_FORMAT)
@@ -25,4 +25,5 @@ public class Utils {
 
         return Instant.parse(fullDate);
     }
+
 }
