@@ -19,6 +19,8 @@ public class FilmDto {
 
     private String name;
 
+    private String poster;
+
     private Double ratingIMDB;
 
     private String tagline;

@@ -82,7 +82,7 @@ public class ActorMapper {
         List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
-            FilmModel model = findByIdWhichWillReturnModel(id);
+            FilmModel model = findByIdModelFilm(id);
             modelList.add(model);
         }
 
@@ -105,7 +105,7 @@ public class ActorMapper {
                 .collect(Collectors.toList());
     }
 
-    public FilmModel findByIdWhichWillReturnModel(Long id) {
+    public FilmModel findByIdModelFilm(Long id) {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         return model.orElseThrow(

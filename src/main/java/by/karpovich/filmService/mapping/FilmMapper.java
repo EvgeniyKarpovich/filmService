@@ -47,6 +47,7 @@ public class FilmMapper {
 
         filmDto.setId(model.getId());
         filmDto.setName(model.getName());
+        filmDto.setPoster(model.getPoster());
         filmDto.setRatingIMDB(model.getRatingIMDB());
         filmDto.setTagline(model.getTagline());
         filmDto.setReleaseDate(utils.mapStringFromInstant(model.getReleaseDate()));

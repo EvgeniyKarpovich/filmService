@@ -29,6 +29,9 @@ public class FilmModel {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "poster")
+    private String poster;
+
     @Column(name = "rating_IMDB", nullable = false)
     private Double ratingIMDB;
 

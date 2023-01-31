@@ -25,4 +25,11 @@
         </sql>
     </changeSet>
 
+    <changeSet id="films-2" author="karpovich.e">
+        <sql>
+            ALTER TABLE FILMS
+            ADD poster  varchar(200);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
