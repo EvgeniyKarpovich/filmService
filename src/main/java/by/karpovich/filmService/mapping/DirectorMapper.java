@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 public class DirectorMapper {
 
     @Autowired
-    private Utils utils;
-    @Autowired
     private DirectorRepository directorRepository;
     @Autowired
     private CountryRepository countryRepository;
@@ -38,7 +36,7 @@ public class DirectorMapper {
 
         dto.setId(model.getId());
         dto.setName(model.getName());
-        dto.setDateOfBirth(utils.mapStringFromInstant(model.getDateOfBirth()));
+        dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
         dto.setPlaceOfBirth(findCountryId(model));
         dto.setFilmsId(findFilmIdFromDirectorModel(model.getId()));
 
@@ -53,7 +51,7 @@ public class DirectorMapper {
         DirectorModel model = new DirectorModel();
 
         model.setName(dto.getName());
-        model.setDateOfBirth(utils.mapInstantFromString(dto.getDateOfBirth()));
+        model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(findByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
         model.setFilms(findListFilmsByDirectorId(dto.getFilmsId()));
 

@@ -1,6 +1,7 @@
 package by.karpovich.filmService.service;
 
 import by.karpovich.filmService.api.dto.FilmDto;
+import by.karpovich.filmService.api.dto.FilmWithPosterDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.FilmModel;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,25 +32,25 @@ public class FilmService {
     @Autowired
     private FilmMapper filmMapper;
 
-    public FilmDto findById(Long id) {
+    public FilmWithPosterDto findById(Long id) {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         FilmModel filmModel = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the film with id = %s was not found", id)));
         log.info("method findById - the film was founded with id = {} ", filmModel.getId());
 
-        return filmMapper.mapDtoFromModel(filmModel);
+        return filmMapper.mapDtoWithImageFromModel(filmModel);
     }
 
-    public FilmDto save(FilmDto filmDto) {
+    public FilmWithPosterDto save(FilmDto filmDto, MultipartFile file) {
         validateAlreadyExists(filmDto, null);
 
-        FilmModel filmModel = filmMapper.mapModelFromDto(filmDto);
+        FilmModel filmModel = filmMapper.mapModelFromDto(filmDto, file);
         FilmModel save = filmRepository.save(filmModel);
 
         log.info("method save - the film with name '{}' was saved", filmDto.getName());
 
-        return filmMapper.mapDtoFromModel(save);
+        return filmMapper.mapDtoWithImageFromModel(save);
     }
 
     public Map<String, Object> findAll(int page, int size) {
@@ -56,7 +58,7 @@ public class FilmService {
         Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmDto> filmDtoList = filmMapper.mapListDtoFromListModel(content);
+        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
         response.put("tutorials", filmDtoList);
@@ -67,16 +69,16 @@ public class FilmService {
         return response;
     }
 
-    public FilmDto update(FilmDto dto, Long id) {
+    public FilmWithPosterDto update(FilmDto dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
-        FilmModel filmModel = filmMapper.mapModelFromDto(dto);
+        FilmModel filmModel = filmMapper.mapModelFromDto(dto, file);
         filmModel.setId(id);
-        FilmModel save = filmRepository.save(filmModel);
+        FilmModel updatedModel = filmRepository.save(filmModel);
 
         log.info("method update - the film {} was updated", dto.getName());
 
-        return filmMapper.mapDtoFromModel(save);
+        return filmMapper.mapDtoWithImageFromModel(updatedModel);
     }
 
     public void deleteById(Long id) {

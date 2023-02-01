@@ -20,7 +20,7 @@ public class GenreMapper {
     @Autowired
     private GenreRepository genreRepository;
     @Autowired
-    FilmRepository filmRepository;
+    private FilmRepository filmRepository;
 
     public GenreDto mapDtoFromModel(GenreModel model) {
         if (model == null) {

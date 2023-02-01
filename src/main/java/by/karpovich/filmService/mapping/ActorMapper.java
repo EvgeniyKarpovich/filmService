@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 public class ActorMapper {
 
     @Autowired
-    private Utils utils;
-    @Autowired
     private CountryRepository countryRepository;
     @Autowired
     private CountryService countryService;
@@ -40,7 +38,7 @@ public class ActorMapper {
 
         dto.setId(model.getId());
         dto.setName(model.getName());
-        dto.setDateOfBirth(utils.mapStringFromInstant(model.getDateOfBirth()));
+        dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
         dto.setPlaceOfBirth(findCountryId(model));
         dto.setHeight(model.getHeight());
         dto.setFilmsId(findFilmIdFromActorModel(model.getId()));
@@ -56,7 +54,7 @@ public class ActorMapper {
         ActorModel model = new ActorModel();
 
         model.setName(dto.getName());
-        model.setDateOfBirth(utils.mapInstantFromString(dto.getDateOfBirth()));
+        model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(countryService.findByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
         model.setHeight(dto.getHeight());
         model.setFilms(findListFilmsByActorId(dto.getFilmsId()));

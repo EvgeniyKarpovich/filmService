@@ -1,10 +1,9 @@
 package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.FilmDto;
+import by.karpovich.filmService.api.dto.FilmWithPosterDto;
 import by.karpovich.filmService.service.FilmService;
-import by.karpovich.filmService.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/films")
@@ -20,12 +18,10 @@ public class FilmController {
 
     @Autowired
     private FilmService filmService;
-    @Value("${upload.path}")
-    private String uploadPath;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-        FilmDto dto = filmService.findById(id);
+    public ResponseEntity<?> findById(@PathVariable("id") Long id) throws IOException {
+        FilmWithPosterDto dto = filmService.findById(id);
 
         if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -35,12 +31,7 @@ public class FilmController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) throws IOException {
-
-        String resulFileName = FileUploadUtil.generationFileName(file);
-        dto.setPoster(resulFileName);
-        FileUploadUtil.saveFile(resulFileName, file);
-
-        FilmDto savedDto = filmService.save(dto);
+        FilmWithPosterDto savedDto = filmService.save(dto, file);
 
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -62,8 +53,8 @@ public class FilmController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody FilmDto dto,
-                                    @PathVariable("id") Long id) {
-        FilmDto updatedDto = filmService.update(dto, id);
+                                    @PathVariable("id") Long id, MultipartFile file) {
+        FilmWithPosterDto updatedDto = filmService.update(dto, id, file);
 
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
