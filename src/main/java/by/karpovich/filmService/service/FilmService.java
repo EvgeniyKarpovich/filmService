@@ -93,7 +93,7 @@ public class FilmService {
     private void validateAlreadyExists(FilmDto filmDto, Long id) {
         Optional<FilmModel> filmModel = filmRepository.findByNameAndDescription(filmDto.getName(), filmDto.getDescription());
         if (filmModel.isPresent() && !filmModel.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the film with id = %s already exist", id));
+            throw new DuplicateException(String.format("the film with id = %s already exist", filmModel.get().getId()));
         }
     }
 

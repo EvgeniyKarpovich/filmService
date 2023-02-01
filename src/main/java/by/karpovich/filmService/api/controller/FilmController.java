@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -20,7 +19,7 @@ public class FilmController {
     private FilmService filmService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findById(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<?> findById(@PathVariable("id") Long id) {
         FilmWithPosterDto dto = filmService.findById(id);
 
         if (dto == null) {
@@ -30,7 +29,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) throws IOException {
+    public ResponseEntity<?> save(@RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) {
         FilmWithPosterDto savedDto = filmService.save(dto, file);
 
         if (savedDto == null) {
@@ -52,8 +51,8 @@ public class FilmController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody FilmDto dto,
-                                    @PathVariable("id") Long id, MultipartFile file) {
+    public ResponseEntity<?> update(@RequestPart FilmDto dto,
+                                    @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         FilmWithPosterDto updatedDto = filmService.update(dto, id, file);
 
         if (updatedDto == null) {
