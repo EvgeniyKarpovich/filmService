@@ -3,6 +3,7 @@ package by.karpovich.filmService.api.controller;
 import by.karpovich.filmService.api.dto.FilmDto;
 import by.karpovich.filmService.api.dto.FilmWithPosterDto;
 import by.karpovich.filmService.service.FilmService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) {
+    public ResponseEntity<?> save(@Valid @RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) {
         FilmWithPosterDto savedDto = filmService.save(dto, file);
 
         if (savedDto == null) {
@@ -51,7 +52,7 @@ public class FilmController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestPart FilmDto dto,
+    public ResponseEntity<?> update(@Valid @RequestPart FilmDto dto,
                                     @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         FilmWithPosterDto updatedDto = filmService.update(dto, id, file);
 
