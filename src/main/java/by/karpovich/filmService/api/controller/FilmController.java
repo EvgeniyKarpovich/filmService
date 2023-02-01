@@ -3,6 +3,8 @@ package by.karpovich.filmService.api.controller;
 import by.karpovich.filmService.api.dto.FilmDto;
 import by.karpovich.filmService.api.dto.FilmWithPosterDto;
 import by.karpovich.filmService.service.FilmService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +16,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
+@Api(tags = "Film Controller")
 public class FilmController {
 
     @Autowired
     private FilmService filmService;
 
+    @ApiOperation(value = "Find movie by id")
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
         FilmWithPosterDto dto = filmService.findById(id);
@@ -29,6 +33,7 @@ public class FilmController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Save movie")
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestPart FilmDto dto, @RequestPart("file") MultipartFile file) {
         FilmWithPosterDto savedDto = filmService.save(dto, file);
@@ -39,6 +44,7 @@ public class FilmController {
         return new ResponseEntity<>("the film was saved successfully", HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find all movies")
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
@@ -51,6 +57,7 @@ public class FilmController {
         }
     }
 
+    @ApiOperation(value = "Update movie by id")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestPart FilmDto dto,
                                     @PathVariable("id") Long id, @RequestPart MultipartFile file) {
@@ -62,6 +69,7 @@ public class FilmController {
         return new ResponseEntity<>("the film was updated successfully", HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete movie By id Film")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         filmService.deleteById(id);
