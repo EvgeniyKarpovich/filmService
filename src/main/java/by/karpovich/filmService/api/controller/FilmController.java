@@ -33,7 +33,8 @@ public class FilmController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> save(@Valid @RequestPart(value = "dto") @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDto dto,
+    public ResponseEntity<?> save(@Valid @RequestPart(value = "dto")
+                                  @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDto dto,
                                   @RequestPart("file") MultipartFile file) {
         FilmWithPosterDto savedDto = filmService.save(dto, file);
 
@@ -55,8 +56,9 @@ public class FilmController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@Valid @RequestPart FilmDto dto,
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(@Valid @RequestPart(value = "dto")
+                                    @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDto dto,
                                     @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         FilmWithPosterDto updatedDto = filmService.update(dto, id, file);
 
