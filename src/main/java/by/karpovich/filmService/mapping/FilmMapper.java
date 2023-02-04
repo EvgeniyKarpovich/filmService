@@ -2,6 +2,7 @@ package by.karpovich.filmService.mapping;
 
 import by.karpovich.filmService.api.dto.FilmDto;
 import by.karpovich.filmService.api.dto.FilmWithPosterDto;
+import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
 import by.karpovich.filmService.jpa.model.DirectorModel;
 import by.karpovich.filmService.jpa.model.FilmModel;
@@ -128,9 +129,9 @@ public class FilmMapper {
     }
 
     private List<Long> findDirectorsIdFromFilmModel(Long id) {
-        Optional<FilmModel> model = filmRepository.findById(id);
+        FilmModel model = findFilmByIdWhichWillReturnModel(id);
 
-        List<DirectorModel> directors = model.get().getDirectors();
+        List<DirectorModel> directors = model.getDirectors();
 
         return directors.stream()
                 .map(DirectorModel::getId)
@@ -138,9 +139,9 @@ public class FilmMapper {
     }
 
     private List<Long> findGenresIdFromFilmModel(Long id) {
-        Optional<FilmModel> byId = filmRepository.findById(id);
+        FilmModel model = findFilmByIdWhichWillReturnModel(id);
 
-        List<GenreModel> genres = byId.get().getGenres();
+        List<GenreModel> genres = model.getGenres();
 
         return genres.stream()
                 .map(GenreModel::getId)
@@ -148,9 +149,9 @@ public class FilmMapper {
     }
 
     private List<Long> findActorsIdFromFilmModel(Long id) {
-        Optional<FilmModel> model = filmRepository.findById(id);
+        FilmModel model = findFilmByIdWhichWillReturnModel(id);
 
-        List<ActorModel> actors = model.get().getActors();
+        List<ActorModel> actors = model.getActors();
 
         return actors.stream()
                 .map(ActorModel::getId)
@@ -158,9 +159,9 @@ public class FilmMapper {
     }
 
     private Long findCountriesIdFromFilmModel(FilmModel filmModel) {
-        Optional<FilmModel> model = filmRepository.findById(filmModel.getId());
+        FilmModel model = findFilmByIdWhichWillReturnModel(filmModel.getId());
 
-        return model.get().getCountry().getId();
+        return model.getCountry().getId();
     }
 
     private List<DirectorModel> findDirectorModelsByDirectorId(List<Long> listDirectorsId) {
@@ -194,6 +195,13 @@ public class FilmMapper {
         }
 
         return actorModels;
+    }
+
+    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
+        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
+
+        return optionalCountry.orElseThrow(
+                () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
     }
 
 }

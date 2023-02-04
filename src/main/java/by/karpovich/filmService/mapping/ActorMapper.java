@@ -39,7 +39,7 @@ public class ActorMapper {
         dto.setId(model.getId());
         dto.setName(model.getName());
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(findCountryId(model));
+        dto.setPlaceOfBirth(findCountryIdFromModel(model));
         dto.setHeight(model.getHeight());
         dto.setFilmsId(findFilmIdFromActorModel(model.getId()));
 
@@ -57,7 +57,7 @@ public class ActorMapper {
         model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(countryService.findByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
         model.setHeight(dto.getHeight());
-        model.setFilms(findListFilmsByActorId(dto.getFilmsId()));
+        model.setFilms(findFilmModelsByActorId(dto.getFilmsId()));
 
         return model;
     }
@@ -76,7 +76,7 @@ public class ActorMapper {
         return actorDtoList;
     }
 
-    private List<FilmModel> findListFilmsByActorId(List<Long> listFilmId) {
+    private List<FilmModel> findFilmModelsByActorId(List<Long> listFilmId) {
         List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
@@ -87,26 +87,33 @@ public class ActorMapper {
         return modelList;
     }
 
-    private Long findCountryId(ActorModel model) {
-        Optional<ActorModel> modelById = actorRepository.findById(model.getId());
+    private Long findCountryIdFromModel(ActorModel model) {
+        ActorModel actorModel = findActorByIdWhichWillReturnModel(model.getId());
 
-        return modelById.get().getPlaceOfBirth().getId();
+        return actorModel.getPlaceOfBirth().getId();
     }
 
     private List<Long> findFilmIdFromActorModel(Long id) {
-        Optional<ActorModel> model = actorRepository.findById(id);
+        ActorModel model = findActorByIdWhichWillReturnModel(id);
 
-        List<FilmModel> films = model.get().getFilms();
+        List<FilmModel> films = model.getFilms();
 
         return films.stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
     }
 
-    public FilmModel findByIdModelFilm(Long id) {
+    private FilmModel findByIdModelFilm(Long id) {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         return model.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
+    }
+
+    private ActorModel findActorByIdWhichWillReturnModel(Long id) {
+        Optional<ActorModel> model = actorRepository.findById(id);
+
+        return model.orElseThrow(
+                () -> new NotFoundModelException("the actor with ID = " + id + " was not found"));
     }
 }

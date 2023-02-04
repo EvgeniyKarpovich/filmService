@@ -63,9 +63,9 @@ public class GenreMapper {
     }
 
     private List<Long> findFilmIdFromGenreModel(Long id) {
-        Optional<GenreModel> byId = genreRepository.findById(id);
+        GenreModel genreModel = findGenreByIdWhichWillReturnModel(id);
 
-        List<FilmModel> films = byId.get().getFilms();
+        List<FilmModel> films = genreModel.getFilms();
 
         return films.stream()
                 .map(FilmModel::getId)
@@ -88,6 +88,13 @@ public class GenreMapper {
 
         return optionalCountry.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
+    }
+
+    public GenreModel findGenreByIdWhichWillReturnModel(Long id) {
+        Optional<GenreModel> genreModel = genreRepository.findById(id);
+
+        return genreModel.orElseThrow(
+                () -> new NotFoundModelException("the genre with ID = " + id + " was not found"));
     }
 
 }

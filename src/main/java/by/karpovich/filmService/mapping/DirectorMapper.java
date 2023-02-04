@@ -37,7 +37,7 @@ public class DirectorMapper {
         dto.setId(model.getId());
         dto.setName(model.getName());
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(findCountryId(model));
+        dto.setPlaceOfBirth(findCountryIdFromModel(model));
         dto.setFilmsId(findFilmIdFromDirectorModel(model.getId()));
 
         return dto;
@@ -52,8 +52,8 @@ public class DirectorMapper {
 
         model.setName(dto.getName());
         model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
-        model.setPlaceOfBirth(findByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
-        model.setFilms(findListFilmsByDirectorId(dto.getFilmsId()));
+        model.setPlaceOfBirth(findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
+        model.setFilms(findFilmsByDirectorId(dto.getFilmsId()));
 
         return model;
     }
@@ -72,23 +72,23 @@ public class DirectorMapper {
         return directorDtoList;
     }
 
-    private Long findCountryId(DirectorModel model) {
-        Optional<DirectorModel> modelById = directorRepository.findById(model.getId());
+    private Long findCountryIdFromModel(DirectorModel model) {
+        DirectorModel directorModel = findDirectorByIdWhichWillReturnModel(model.getId());
 
-        return modelById.get().getPlaceOfBirth().getId();
+        return directorModel.getPlaceOfBirth().getId();
     }
 
     private List<Long> findFilmIdFromDirectorModel(Long id) {
-        Optional<DirectorModel> model = directorRepository.findById(id);
+        DirectorModel model = findDirectorByIdWhichWillReturnModel(id);
 
-        List<FilmModel> listFilm = model.get().getFilms();
+        List<FilmModel> listFilm = model.getFilms();
 
         return listFilm.stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
     }
 
-    private List<FilmModel> findListFilmsByDirectorId(List<Long> listFilmId) {
+    private List<FilmModel> findFilmsByDirectorId(List<Long> listFilmId) {
         List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
@@ -99,17 +99,24 @@ public class DirectorMapper {
         return modelList;
     }
 
-    public CountryModel findByIdWhichWillReturnModel(Long id) {
+    private CountryModel findCountryByIdWhichWillReturnModel(Long id) {
         Optional<CountryModel> model = countryRepository.findById(id);
 
         return model.orElseThrow(
                 () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
     }
 
-    public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
+    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         return model.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
+    }
+
+    private DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
+        Optional<DirectorModel> directorModel = directorRepository.findById(id);
+
+        return directorModel.orElseThrow(
+                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
     }
 }
