@@ -83,14 +83,14 @@ public class GenreMapper {
         return filmModelList;
     }
 
-    public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
+    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
         Optional<FilmModel> optionalCountry = filmRepository.findById(id);
 
         return optionalCountry.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
     }
 
-    public GenreModel findGenreByIdWhichWillReturnModel(Long id) {
+    private GenreModel findGenreByIdWhichWillReturnModel(Long id) {
         Optional<GenreModel> genreModel = genreRepository.findById(id);
 
         return genreModel.orElseThrow(
