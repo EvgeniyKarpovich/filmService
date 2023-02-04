@@ -60,7 +60,7 @@ public class GenresService {
 
         Map<String, Object> response = new HashMap<>();
 
-        response.put("tutorials", genreDtoList);
+        response.put("Genres", genreDtoList);
         response.put("currentPage", genreModelPage.getNumber());
         response.put("totalItems", genreModelPage.getTotalElements());
         response.put("totalPages", genreModelPage.getTotalPages());

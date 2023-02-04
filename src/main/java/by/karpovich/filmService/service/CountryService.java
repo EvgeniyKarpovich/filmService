@@ -61,7 +61,7 @@ public class CountryService {
         List<CountryDto> countryDtoList = countryMapper.mapListDtoFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("tutorials", countryDtoList);
+        response.put("Countries", countryDtoList);
         response.put("currentPage", countryModelPage.getNumber());
         response.put("totalItems", countryModelPage.getTotalElements());
         response.put("totalPages", countryModelPage.getTotalPages());

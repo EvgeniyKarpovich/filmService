@@ -61,7 +61,7 @@ public class ActorService {
 
         Map<String, Object> response = new HashMap<>();
 
-        response.put("tutorials", actorDtoList);
+        response.put("Actors", actorDtoList);
         response.put("currentPage", actorModelPage.getNumber());
         response.put("totalItems", actorModelPage.getTotalElements());
         response.put("totalPages", actorModelPage.getTotalPages());

@@ -55,15 +55,16 @@ public class FilmService {
         return filmMapper.mapDtoWithImageFromModel(save);
     }
 
+    //find all sort by rating
     public Map<String, Object> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
         Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
         List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("tutorials", filmDtoList);
+        response.put("Films", filmDtoList);
         response.put("currentPage", filmModelPageModelPage.getNumber());
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
@@ -73,20 +74,21 @@ public class FilmService {
         return response;
     }
 
+    //find by criteria sort by ratingK
     public Map<String, Object> findAllByCriteria(FilmDtoCriteria filmSearchCriteriaDto, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
         Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(FilmSpecificationUtils.createFromCriteria(filmSearchCriteriaDto), pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
         List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("tutorials", filmDtoList);
+        response.put("Films", filmDtoList);
         response.put("currentPage", filmModelPageModelPage.getNumber());
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
-        log.info("IN findAll - the number of films according to these criteria = {}", filmDtoList.size());
+        log.info("method findAllByCriteria  - the number of films according to these criteria = {}", filmDtoList.size());
 
         return response;
 

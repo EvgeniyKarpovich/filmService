@@ -62,7 +62,7 @@ public class CareerService {
         List<CareerDto> CareerDtoList = careerMapper.mapListDtoFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("tutorials", CareerDtoList);
+        response.put("Careers", CareerDtoList);
         response.put("currentPage", CareerModelPage.getNumber());
         response.put("totalItems", CareerModelPage.getTotalElements());
         response.put("totalPages", CareerModelPage.getTotalPages());

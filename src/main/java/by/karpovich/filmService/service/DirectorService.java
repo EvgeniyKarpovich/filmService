@@ -60,7 +60,7 @@ public class DirectorService {
 
         Map<String, Object> response = new HashMap<>();
 
-        response.put("tutorials", actorDtoList);
+        response.put("Directors", actorDtoList);
         response.put("currentPage", directorModelPage.getNumber());
         response.put("totalItems", directorModelPage.getTotalElements());
         response.put("totalPages", directorModelPage.getTotalPages());
