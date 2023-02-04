@@ -2,10 +2,12 @@ package by.karpovich.filmService.service;
 
 import by.karpovich.filmService.api.dto.FilmDto;
 import by.karpovich.filmService.api.dto.FilmWithPosterDto;
+import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
+import by.karpovich.filmService.jpa.specification.FilmSpecificationUtils;
 import by.karpovich.filmService.mapping.FilmMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +68,28 @@ public class FilmService {
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
+        log.info("IN findAll - the number of films according to these criteria = {}", filmDtoList.size());
+
         return response;
+    }
+
+    public Map<String, Object> findAllByCriteria(FilmDtoCriteria filmSearchCriteriaDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(FilmSpecificationUtils.createFromCriteria(filmSearchCriteriaDto), pageable);
+        List<FilmModel> content = filmModelPageModelPage.getContent();
+
+        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("tutorials", filmDtoList);
+        response.put("currentPage", filmModelPageModelPage.getNumber());
+        response.put("totalItems", filmModelPageModelPage.getTotalElements());
+        response.put("totalPages", filmModelPageModelPage.getTotalPages());
+
+        log.info("IN findAll - the number of films according to these criteria = {}", filmDtoList.size());
+
+        return response;
+
     }
 
     public FilmWithPosterDto update(FilmDto dto, Long id, MultipartFile file) {

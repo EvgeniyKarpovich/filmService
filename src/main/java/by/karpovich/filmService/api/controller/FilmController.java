@@ -2,6 +2,7 @@ package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.FilmDto;
 import by.karpovich.filmService.api.dto.FilmWithPosterDto;
+import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.service.FilmService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,6 +49,19 @@ public class FilmController {
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
         Map<String, Object> listFilmDto = filmService.findAll(page, size);
+
+        if (listFilmDto != null) {
+            return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/byCriteria")
+    public ResponseEntity<?> findByCriteria(FilmDtoCriteria dtoCriteria,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> listFilmDto = filmService.findAllByCriteria(dtoCriteria, page, size);
 
         if (listFilmDto != null) {
             return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
