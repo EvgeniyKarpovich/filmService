@@ -32,7 +32,7 @@ public class ActorModel {
     @Column(name = "date_of_birth")
     private Instant dateOfBirth;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private CountryModel placeOfBirth;
 

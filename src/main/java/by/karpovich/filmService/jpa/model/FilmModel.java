@@ -41,17 +41,17 @@ public class FilmModel {
     @Column(name = "release_date", nullable = false)
     private Instant releaseDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private CountryModel country;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "director_film",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"))
     private List<DirectorModel> directors;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "genre_film",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
@@ -63,7 +63,7 @@ public class FilmModel {
     @Column(name = "duration_in_minutes", nullable = false)
     private int durationInMinutes;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "actor_film",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"))
