@@ -11,8 +11,8 @@
             film_id integer NOT NULL,
             actor_id integer NOT NULL,
             PRIMARY KEY (film_id, actor_id),
-            CONSTRAINT fk_film FOREIGN KEY (film_id) references FILMS (id) ON UPDATE CASCADE,
-            CONSTRAINT fk_actor FOREIGN KEY (actor_id) references ACTORS (id) ON UPDATE CASCADE ON DELETE CASCADE
+            CONSTRAINT fk_film FOREIGN KEY (film_id) references FILMS (id),
+            CONSTRAINT fk_actor FOREIGN KEY (actor_id) references ACTORS (id)
             );
         </sql>
     </changeSet>
