@@ -57,6 +57,71 @@ public class FilmController {
         }
     }
 
+    @GetMapping("/filmsByName/{name}")
+    public ResponseEntity<?> findAll(@RequestParam("name") String name,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> filmsByName = filmService.findFilmsByName(name, page, size);
+
+        if (filmsByName != null) {
+            return new ResponseEntity<>(filmsByName, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filmsByGenreId/{genreId}")
+    public ResponseEntity<?> findAllFilmsByGenreId(@RequestParam("genreId") Long genreId,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> listFilmDto = filmService.findAllFilmsByGenreId(genreId, page, size);
+
+        if (listFilmDto != null) {
+            return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filmsByActorId/{actorId}")
+    public ResponseEntity<?> findAllFilmsByActorId(@RequestParam("actorId") Long actorId,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> listFilmDto = filmService.findAllFilmsByActorId(actorId, page, size);
+
+        if (listFilmDto != null) {
+            return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filmsByCountryId/{countryId}")
+    public ResponseEntity<?> findByCountryId(@RequestParam("countryId") Long countryId,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> listFilmDto = filmService.findAllFilmsByCountryId(countryId, page, size);
+
+        if (listFilmDto != null) {
+            return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/filmsByDirectorId/{directorId}")
+    public ResponseEntity<?> findByDirectorId(@RequestParam("directorId") Long directorId,
+                                              @RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> listFilmDto = filmService.findAllFilmsByDirectorId(directorId, page, size);
+
+        if (listFilmDto != null) {
+            return new ResponseEntity<>(listFilmDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/byCriteria")
     public ResponseEntity<?> findByCriteria(FilmDtoCriteria dtoCriteria,
                                             @RequestParam(defaultValue = "0") int page,

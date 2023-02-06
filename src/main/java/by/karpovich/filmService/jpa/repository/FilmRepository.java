@@ -18,4 +18,19 @@ public interface FilmRepository extends JpaRepository<FilmModel, Long>,
     Optional<FilmModel> findByNameAndDescription(String name, String description);
 
     Page<FilmModel> findAll(Pageable pageable);
+
+    Page<FilmModel> findByGenresId(Long genreId, Pageable pageable);
+
+    Page<FilmModel> findByActorsId(Long actorId, Pageable pageable);
+
+    Page<FilmModel> findByCountryId(Long countryId, Pageable pageable);
+
+    Page<FilmModel> findByDirectorsId(Long countryId, Pageable pageable);
+
+    Page<FilmModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    //    @Query(value = "SELECT f FROM Films f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', ?1,'%')) ORDER BY f.rating_IMDB ASC", nativeQuery = true)
+//    List<FilmModel> getByNameLikeCaseInsensitive(String name);
+
+
 }
