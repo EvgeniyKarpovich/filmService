@@ -12,4 +12,6 @@ public class FilmDtoCriteria {
     private String nameGenre;
 
     private Double rating;
+
+    private String date;
 }
