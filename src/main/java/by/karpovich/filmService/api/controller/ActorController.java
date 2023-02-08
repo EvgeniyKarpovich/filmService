@@ -56,6 +56,19 @@ public class ActorController {
         }
     }
 
+    @GetMapping("/actorsByName/{name}")
+    public ResponseEntity<?> findAllByName(@RequestParam("name") String name,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "20") int size) {
+        Map<String, Object> actorsByName = actorService.findActorsByName(name, page, size);
+
+        if (actorsByName != null) {
+            return new ResponseEntity<>(actorsByName, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(@Valid @RequestPart(value = "dto")
                                     @Parameter(schema = @Schema(type = "string", format = "binary")) ActorDto dto,

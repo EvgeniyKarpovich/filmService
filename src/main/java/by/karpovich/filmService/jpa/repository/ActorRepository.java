@@ -15,4 +15,6 @@ public interface ActorRepository extends JpaRepository<ActorModel, Long>, Paging
     Optional<ActorModel> findByName(String name);
 
     Page<ActorModel> findAll(Pageable pageable);
+
+    Page<ActorModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

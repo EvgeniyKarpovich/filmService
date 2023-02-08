@@ -58,7 +58,7 @@ public class FilmController {
     }
 
     @GetMapping("/filmsByName/{name}")
-    public ResponseEntity<?> findAll(@RequestParam("name") String name,
+    public ResponseEntity<?> findAllByName(@RequestParam("name") String name,
                                      @RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "20") int size) {
         Map<String, Object> filmsByName = filmService.findFilmsByName(name, page, size);

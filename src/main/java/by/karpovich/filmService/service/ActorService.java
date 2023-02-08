@@ -2,9 +2,11 @@ package by.karpovich.filmService.service;
 
 import by.karpovich.filmService.api.dto.actorDto.ActorDto;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
+import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
+import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.repository.ActorRepository;
 import by.karpovich.filmService.mapping.ActorMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +92,25 @@ public class ActorService {
             throw new NotFoundModelException(String.format(" the actor with id = %s was not found", id));
         }
         log.info("method deleteById - the actor with id = {} deleted", id);
+    }
+
+    //find films by name contain name ignore case
+    public Map<String, Object> findActorsByName(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<ActorModel> actorModelPage = actorRepository.findByNameContainingIgnoreCase(name, pageable);
+        List<ActorModel> content = actorModelPage.getContent();
+
+        List<ActorDtoWithAvatar> actorDtoWithAvatars = actorMapper.mapListDtoWithAvatarFromListModel(content);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("Films", actorDtoWithAvatars);
+        response.put("currentPage", actorModelPage.getNumber());
+        response.put("totalItems", actorModelPage.getTotalElements());
+        response.put("totalPages", actorModelPage.getTotalPages());
+
+        log.info("method findActorsByName  - the number of actors with name = {}", actorDtoWithAvatars.size());
+
+        return response;
     }
 
     private void validateAlreadyExists(ActorDto dto, Long id) {
