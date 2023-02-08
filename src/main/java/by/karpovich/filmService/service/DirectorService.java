@@ -1,6 +1,7 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.DirectorDto;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDto;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDtoWithAvatar;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.DirectorModel;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,25 +32,25 @@ public class DirectorService {
     @Autowired
     private DirectorMapper directorMapper;
 
-    public DirectorDto findById(Long id) {
+    public DirectorDtoWithAvatar findById(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
         DirectorModel model = directorModel.orElseThrow(
                 () -> new NotFoundModelException(String.format("the director with id = %s was not found", id)));
 
         log.info("method findById - the director was founded with id = {} ", model.getId());
 
-        return directorMapper.mapDtoFromModel(model);
+        return directorMapper.mapDtoWithImageFromModel(model);
     }
 
-    public DirectorDto save(DirectorDto dto) {
+    public DirectorDtoWithAvatar save(DirectorDto dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
-        DirectorModel model = directorMapper.mapModelFromDto(dto);
+        DirectorModel model = directorMapper.mapModelFromDto(dto, file);
         DirectorModel save = directorRepository.save(model);
 
         log.info("method save - the director with name '{}' was saved", dto.getName());
 
-        return directorMapper.mapDtoFromModel(save);
+        return directorMapper.mapDtoWithImageFromModel(save);
     }
 
     public Map<String, Object> findAll(int page, int size) {
@@ -56,7 +58,7 @@ public class DirectorService {
         Page<DirectorModel> directorModelPage = directorRepository.findAll(pageable);
         List<DirectorModel> content = directorModelPage.getContent();
 
-        List<DirectorDto> actorDtoList = directorMapper.mapListDtoFromListModel(content);
+        List<DirectorDtoWithAvatar> actorDtoList = directorMapper.mapListDtoWithAvatarFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
 
@@ -68,16 +70,16 @@ public class DirectorService {
         return response;
     }
 
-    public DirectorDto update(DirectorDto dto, Long id) {
+    public DirectorDtoWithAvatar update(DirectorDto dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
-        DirectorModel model = directorMapper.mapModelFromDto(dto);
+        DirectorModel model = directorMapper.mapModelFromDto(dto, file);
         model.setId(id);
         DirectorModel save = directorRepository.save(model);
 
         log.info("method update - the director {} was updated", dto.getName());
 
-        return directorMapper.mapDtoFromModel(save);
+        return directorMapper.mapDtoWithImageFromModel(save);
     }
 
     public void deleteById(Long id) {

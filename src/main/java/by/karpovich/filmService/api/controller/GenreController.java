@@ -1,6 +1,6 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.GenreDto;
+import by.karpovich.filmService.api.dto.genreDto.GenreDto;
 import by.karpovich.filmService.service.GenresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

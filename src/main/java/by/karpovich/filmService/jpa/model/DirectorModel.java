@@ -29,6 +29,9 @@ public class DirectorModel {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "date_of_birth")
     private Instant dateOfBirth;
 

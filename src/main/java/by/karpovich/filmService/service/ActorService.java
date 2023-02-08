@@ -1,6 +1,7 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.ActorDto;
+import by.karpovich.filmService.api.dto.actorDto.ActorDto;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,7 @@ public class ActorService {
     @Autowired
     private ActorMapper actorMapper;
 
-    public ActorDto findById(Long id) {
+    public ActorDtoWithAvatar findById(Long id) {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         ActorModel actorModel = model.orElseThrow(
@@ -38,18 +40,18 @@ public class ActorService {
 
         log.info("method findById - the actor was founded with id = {} ", actorModel.getId());
 
-        return actorMapper.mapDtoFromModel(actorModel);
+        return actorMapper.mapDtoWithImageFromModel(actorModel);
     }
 
-    public ActorDto save(ActorDto dto) {
+    public ActorDtoWithAvatar save(ActorDto dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
-        ActorModel model = actorMapper.mapModelFromDto(dto);
+        ActorModel model = actorMapper.mapModelFromDto(dto, file);
         ActorModel save = actorRepository.save(model);
 
         log.info("method save - the actor with name '{}' was saved", dto.getName());
 
-        return actorMapper.mapDtoFromModel(save);
+        return actorMapper.mapDtoWithImageFromModel(save);
     }
 
     public Map<String, Object> findAll(int page, int size) {
@@ -57,7 +59,7 @@ public class ActorService {
         Page<ActorModel> actorModelPage = actorRepository.findAll(pageable);
         List<ActorModel> content = actorModelPage.getContent();
 
-        List<ActorDto> actorDtoList = actorMapper.mapListDtoFromListModel(content);
+        List<ActorDtoWithAvatar> actorDtoList = actorMapper.mapListDtoWithAvatarFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
 
@@ -69,16 +71,16 @@ public class ActorService {
         return response;
     }
 
-    public ActorDto update(ActorDto dto, Long id) {
+    public ActorDtoWithAvatar update(ActorDto dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
-        ActorModel model = actorMapper.mapModelFromDto(dto);
+        ActorModel model = actorMapper.mapModelFromDto(dto, file);
         model.setId(id);
         ActorModel save = actorRepository.save(model);
 
         log.info("method update - the actor {} was updated", dto.getName());
 
-        return actorMapper.mapDtoFromModel(save);
+        return actorMapper.mapDtoWithImageFromModel(save);
     }
 
     public void deleteById(Long id) {

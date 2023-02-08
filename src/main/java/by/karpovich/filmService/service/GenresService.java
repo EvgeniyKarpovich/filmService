@@ -1,6 +1,6 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.GenreDto;
+import by.karpovich.filmService.api.dto.genreDto.GenreDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.GenreModel;

@@ -21,4 +21,11 @@
         </sql>
     </changeSet>
 
+    <changeSet id="actors-2" author="karpovich.e">
+        <sql>
+            ALTER TABLE ACTORS
+            ADD avatar varchar(200);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

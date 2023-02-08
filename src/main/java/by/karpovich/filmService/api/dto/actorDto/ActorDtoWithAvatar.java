@@ -1,23 +1,32 @@
-package by.karpovich.filmService.api.dto;
+package by.karpovich.filmService.api.dto.actorDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CareerDto {
+public class ActorDtoWithAvatar {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @Schema(example = "Actor")
-    @NotBlank(message = "Enter name")
     private String name;
+
+    private byte[] avatar;
+
+    private String dateOfBirth;
+
+    private Long placeOfBirth;
+
+    private Integer height;
+
+    private List<Long> filmsId = new ArrayList<>();
 }

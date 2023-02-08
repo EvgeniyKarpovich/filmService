@@ -1,6 +1,6 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.CountryDto;
+import by.karpovich.filmService.api.dto.countryDto.CountryDto;
 import by.karpovich.filmService.service.CountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

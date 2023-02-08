@@ -1,6 +1,6 @@
 package by.karpovich.filmService.mapping;
 
-import by.karpovich.filmService.api.dto.CareerDto;
+import by.karpovich.filmService.api.dto.careerDto.CareerDto;
 import by.karpovich.filmService.jpa.model.CareerModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

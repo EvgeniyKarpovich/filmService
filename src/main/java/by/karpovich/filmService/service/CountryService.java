@@ -1,6 +1,6 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.CountryDto;
+import by.karpovich.filmService.api.dto.countryDto.CountryDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.CountryModel;

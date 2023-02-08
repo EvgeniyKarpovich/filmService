@@ -1,4 +1,4 @@
-package by.karpovich.filmService.api.dto;
+package by.karpovich.filmService.api.dto.filmDto;
 
 import by.karpovich.filmService.api.validation.actorValidation.ValidActor;
 import by.karpovich.filmService.api.validation.countryValidation.ValidCountry;

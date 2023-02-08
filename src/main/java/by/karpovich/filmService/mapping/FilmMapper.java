@@ -1,7 +1,7 @@
 package by.karpovich.filmService.mapping;
 
-import by.karpovich.filmService.api.dto.FilmDto;
-import by.karpovich.filmService.api.dto.FilmWithPosterDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
 import by.karpovich.filmService.jpa.model.DirectorModel;

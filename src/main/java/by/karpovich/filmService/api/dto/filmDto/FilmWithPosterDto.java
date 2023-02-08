@@ -1,4 +1,4 @@
-package by.karpovich.filmService.api.dto;
+package by.karpovich.filmService.api.dto.filmDto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

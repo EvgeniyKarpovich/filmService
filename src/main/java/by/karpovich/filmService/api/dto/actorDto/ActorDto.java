@@ -1,5 +1,6 @@
-package by.karpovich.filmService.api.dto;
+package by.karpovich.filmService.api.dto.actorDto;
 
+import by.karpovich.filmService.api.validation.countryValidation.ValidCountry;
 import by.karpovich.filmService.api.validation.filmValidation.ValidFilm;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,14 +18,28 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GenreDto {
+public class ActorDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @Schema(example = "Drama")
+    @Schema(example = "Brad Pitt")
     @NotBlank(message = "Enter name")
     private String name;
+
+    private String avatar;
+
+    @Schema(example = "1972-10-10")
+    @NotBlank(message = "Enter date of birth")
+    private String dateOfBirth;
+
+    @Schema(example = "3")
+    @ValidCountry
+    private Long placeOfBirth;
+
+    @Schema(example = "189")
+    @NotNull(message = "Enter height")
+    private Integer height;
 
     @Schema(example = "1, 3")
     @NotNull(message = "Enter film id")

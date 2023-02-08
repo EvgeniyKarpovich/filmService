@@ -1,6 +1,6 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.CareerDto;
+import by.karpovich.filmService.api.dto.careerDto.CareerDto;
 import by.karpovich.filmService.service.CareerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

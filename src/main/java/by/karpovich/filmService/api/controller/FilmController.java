@@ -1,8 +1,8 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.FilmDto;
-import by.karpovich.filmService.api.dto.FilmWithPosterDto;
 import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
+import by.karpovich.filmService.api.dto.filmDto.FilmDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.service.FilmService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;

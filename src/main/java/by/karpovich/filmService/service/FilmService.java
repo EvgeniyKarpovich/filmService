@@ -1,7 +1,7 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.FilmDto;
-import by.karpovich.filmService.api.dto.FilmWithPosterDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;

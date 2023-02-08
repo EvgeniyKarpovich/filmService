@@ -1,4 +1,4 @@
-package by.karpovich.filmService.api.dto;
+package by.karpovich.filmService.api.dto.directorDto;
 
 import by.karpovich.filmService.api.validation.countryValidation.ValidCountry;
 import by.karpovich.filmService.api.validation.filmValidation.ValidFilm;
@@ -14,30 +14,30 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActorDto {
+public class DirectorDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @Schema(example = "Brad Pitt")
+    @Schema(example = "Guy Ritchie")
     @NotBlank(message = "Enter name")
     private String name;
 
-    @Schema(example = "1972-10-10")
+    private String avatar;
+
+    @Schema(example = "1965-10-10")
     @NotBlank(message = "Enter date of birth")
     private String dateOfBirth;
 
     @Schema(example = "3")
     @ValidCountry
+    @NotNull(message = "Enter country id")
     private Long placeOfBirth;
-
-    @Schema(example = "189")
-    @NotNull(message = "Enter height")
-    private Integer height;
 
     @Schema(example = "1, 3")
     @NotNull(message = "Enter film id")

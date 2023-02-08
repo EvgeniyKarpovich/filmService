@@ -1,6 +1,6 @@
 package by.karpovich.filmService.mapping;
 
-import by.karpovich.filmService.api.dto.CountryDto;
+import by.karpovich.filmService.api.dto.countryDto.CountryDto;
 import by.karpovich.filmService.jpa.model.CountryModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

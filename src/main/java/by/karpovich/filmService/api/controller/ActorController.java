@@ -1,11 +1,17 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.ActorDto;
+import by.karpovich.filmService.api.dto.actorDto.ActorDto;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
 import by.karpovich.filmService.service.ActorService;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -18,7 +24,7 @@ public class ActorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-        ActorDto dto = actorService.findById(id);
+        ActorDtoWithAvatar dto = actorService.findById(id);
 
         if (dto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -26,9 +32,11 @@ public class ActorController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<?> save(@RequestBody ActorDto dto) {
-        ActorDto savedDto = actorService.save(dto);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> save(@Valid @RequestPart(value = "dto")
+                                  @Parameter(schema = @Schema(type = "string", format = "binary")) ActorDto dto,
+                                  @RequestPart("file") MultipartFile file) {
+        ActorDtoWithAvatar savedDto = actorService.save(dto, file);
 
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,10 +56,11 @@ public class ActorController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody ActorDto dto,
-                                    @PathVariable("id") Long id) {
-        ActorDto updatedDto = actorService.update(dto, id);
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> update(@Valid @RequestPart(value = "dto")
+                                    @Parameter(schema = @Schema(type = "string", format = "binary")) ActorDto dto,
+                                    @PathVariable("id") Long id, @RequestPart MultipartFile file) {
+        ActorDtoWithAvatar updatedDto = actorService.update(dto, id, file);
 
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
