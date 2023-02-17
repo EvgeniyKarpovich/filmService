@@ -43,7 +43,7 @@ public class FileUploadDownloadUtil {
     }
 
     public static byte[] getImageAsResponseEntity(String fileName) {
-        String dirPath = "D://image//poster" + "//";
+        String dirPath = UPLOAD_PATH + "//";
         InputStream in = null;
         byte[] media = new byte[0];
         try {

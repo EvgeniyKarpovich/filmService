@@ -133,13 +133,13 @@ public class ActorMapper {
         Optional<FilmModel> optionalCountry = filmRepository.findById(id);
 
         return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
+                () -> new NotFoundModelException("the film with ID = " + id + " not found"));
     }
 
     public ActorModel findActorByIdWhichWillReturnModel(Long id) {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         return model.orElseThrow(
-                () -> new NotFoundModelException("the actor with ID = " + id + " was not found"));
+                () -> new NotFoundModelException("the actor with ID = " + id + " not found"));
     }
 }

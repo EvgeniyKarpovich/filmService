@@ -168,6 +168,6 @@ public class FilmMapper {
         Optional<FilmModel> optionalCountry = filmRepository.findById(id);
 
         return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
+                () -> new NotFoundModelException("the film with ID = " + id + " not found"));
     }
 }

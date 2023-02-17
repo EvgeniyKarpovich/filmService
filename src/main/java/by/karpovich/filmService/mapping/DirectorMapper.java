@@ -141,13 +141,13 @@ public class DirectorMapper {
         Optional<FilmModel> optionalCountry = filmRepository.findById(id);
 
         return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
+                () -> new NotFoundModelException("the film with ID = " + id + " not found"));
     }
 
     public DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
 
         return directorModel.orElseThrow(
-                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
+                () -> new NotFoundModelException("the country with ID = " + id + " not found"));
     }
 }
