@@ -46,7 +46,7 @@ public class CareerController {
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the career was saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the career saved successfully", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -57,14 +57,14 @@ public class CareerController {
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the career was updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the career updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         careerService.deleteById(id);
 
-        return new ResponseEntity<>("the career was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the career deleted successfully", HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")

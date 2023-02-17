@@ -46,7 +46,7 @@ public class CountryController {
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the country was saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the country saved successfully", HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -57,14 +57,14 @@ public class CountryController {
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the country was updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the country updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         countryService.deleteById(id);
 
-        return new ResponseEntity<>("the country was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the country deleted successfully", HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")

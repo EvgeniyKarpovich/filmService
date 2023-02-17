@@ -33,9 +33,9 @@ public class GenresService {
     public GenreDto findById(Long id) {
         Optional<GenreModel> model = genreRepository.findById(id);
         GenreModel genresModel = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the genre with id = %s was not found", id)));
+                () -> new NotFoundModelException(String.format("the genre with id = %s not found", id)));
 
-        log.info("method findById - the genre was founded with id = {} ", genresModel.getId());
+        log.info("method findById - the genre found with id = {} ", genresModel.getId());
 
         return genreMapper.mapDtoFromModel(genresModel);
     }
@@ -46,7 +46,7 @@ public class GenresService {
         GenreModel model = genreMapper.mapModelFromDto(dto);
         GenreModel savedModel = genreRepository.save(model);
 
-        log.info("method save - the genre with name '{}' was saved", dto.getName());
+        log.info("method save - the genre with name '{}' saved", dto.getName());
 
         return genreMapper.mapDtoFromModel(savedModel);
     }
@@ -75,7 +75,7 @@ public class GenresService {
         model.setId(id);
         GenreModel save = genreRepository.save(model);
 
-        log.info("method update - the genre {} was updated", dto.getName());
+        log.info("method update - the genre {} updated", dto.getName());
 
         return genreMapper.mapDtoFromModel(save);
     }
@@ -84,7 +84,7 @@ public class GenresService {
         if (genreRepository.findById(id).isPresent()) {
             genreRepository.deleteById(id);
         } else {
-            throw new NotFoundModelException(String.format(" the genre with id = %s was not found", id));
+            throw new NotFoundModelException(String.format(" the genre with id = %s not found", id));
         }
         log.info("method deleteById - the genre with id = {} deleted", id);
     }

@@ -6,8 +6,9 @@ import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
 import by.karpovich.filmService.jpa.model.DirectorModel;
 import by.karpovich.filmService.jpa.model.FilmModel;
-import by.karpovich.filmService.jpa.model.GenreModel;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
+import by.karpovich.filmService.service.ActorService;
+import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,13 @@ public class FilmMapper {
     @Autowired
     private ActorMapper actorMapper;
     @Autowired
-    private CountryMap countryMapper;
+    private CountryService countryService;
     @Autowired
     private GenreMapper genreMapper;
     @Autowired
     private DirectorMapper directorMapper;
+    @Autowired
+    private ActorService actorService;
 
     public FilmDto mapDtoFromModel(FilmModel model, MultipartFile file) {
         if (model == null) {
@@ -49,12 +52,12 @@ public class FilmMapper {
         filmDto.setRatingIMDB(model.getRatingIMDB());
         filmDto.setTagline(model.getTagline());
         filmDto.setReleaseDate(Utils.mapStringFromInstant(model.getReleaseDate()));
-        filmDto.setCountryId(countryMapper.findCountriesIdFromFilmModel(model));
-        filmDto.setDirectorsId(directorMapper.findDirectorsIdFromFilmModel(model.getId()));
+        filmDto.setCountryId(findCountriesIdFromFilmModel(model));
+        filmDto.setDirectorsId(findDirectorsIdFromFilmModel(model.getId()));
         filmDto.setGenresId(genreMapper.findGenresIdFromFilmModel(model.getId()));
         filmDto.setAgeLimit(model.getAgeLimit());
         filmDto.setDurationInMinutes(model.getDurationInMinutes());
-        filmDto.setActorsId(actorMapper.findActorsIdFromFilmModel(model.getId()));
+        filmDto.setActorsId(findActorsIdFromFilmModel(model.getId()));
         filmDto.setDescription(model.getDescription());
 
         return filmDto;
@@ -75,12 +78,12 @@ public class FilmMapper {
         model.setRatingIMDB(dto.getRatingIMDB());
         model.setTagline(dto.getTagline());
         model.setReleaseDate(Utils.mapInstantFromString(dto.getReleaseDate()));
-        model.setCountry(countryMapper.findCountryByIdWhichWillReturnModel(dto.getCountryId()));
+        model.setCountry(countryService.findCountryByIdWhichWillReturnModel(dto.getCountryId()));
         model.setDirectors(directorMapper.findDirectorModelsByDirectorId(dto.getDirectorsId()));
         model.setGenres(genreMapper.findGenreModelsByGenreId(dto.getGenresId()));
         model.setAgeLimit(dto.getAgeLimit());
         model.setDurationInMinutes(dto.getDurationInMinutes());
-        model.setActors(actorMapper.findActorModelsByActorId(dto.getActorsId()));
+        model.setActors(findActorModelsByActorId(dto.getActorsId()));
         model.setDescription(dto.getDescription());
 
         return model;
@@ -113,78 +116,52 @@ public class FilmMapper {
         dto.setRatingIMDB(model.getRatingIMDB());
         dto.setTagline(model.getTagline());
         dto.setReleaseDate(Utils.mapStringFromInstant(model.getReleaseDate()));
-        dto.setCountryId(countryMapper.findCountriesIdFromFilmModel(model));
-        dto.setDirectorsId(directorMapper.findDirectorsIdFromFilmModel(model.getId()));
+        dto.setCountryId(findCountriesIdFromFilmModel(model));
+        dto.setDirectorsId(findDirectorsIdFromFilmModel(model.getId()));
         dto.setGenresId(genreMapper.findGenresIdFromFilmModel(model.getId()));
         dto.setAgeLimit(model.getAgeLimit());
         dto.setDurationInMinutes(model.getDurationInMinutes());
-        dto.setActorsId(actorMapper.findActorsIdFromFilmModel(model.getId()));
+        dto.setActorsId(findActorsIdFromFilmModel(model.getId()));
         dto.setDescription(model.getDescription());
 
         return dto;
     }
 
-    public List<FilmModel> findFilmsByGenreId(List<Long> listFilmId) {
-        List<FilmModel> filmModelList = new ArrayList<>();
+    public List<ActorModel> findActorModelsByActorId(List<Long> listActorsId) {
+        List<ActorModel> actorModels = new ArrayList<>();
 
-        for (Long id : listFilmId) {
-            FilmModel model = findFilmByIdWhichWillReturnModel(id);
-            filmModelList.add(model);
+        for (Long id : listActorsId) {
+            ActorModel model = actorMapper.findActorByIdWhichWillReturnModel(id);
+            actorModels.add(model);
         }
 
-        return filmModelList;
+        return actorModels;
     }
 
-    public List<Long> findFilmIdFromGenreModel(Long id) {
-        GenreModel genreModel = genreMapper.findGenreByIdWhichWillReturnModel(id);
+    public List<Long> findActorsIdFromFilmModel(Long id) {
+        FilmModel model = findFilmByIdWhichWillReturnModel(id);
 
-        List<FilmModel> films = genreModel.getFilms();
+        List<ActorModel> actors = model.getActors();
 
-        return films.stream()
-                .map(FilmModel::getId)
+        return actors.stream()
+                .map(ActorModel::getId)
                 .collect(Collectors.toList());
     }
 
-    public List<Long> findFilmsIdFromActorModel(Long id) {
-        ActorModel model = actorMapper.findActorByIdWhichWillReturnModel(id);
+    public List<Long> findDirectorsIdFromFilmModel(Long id) {
+        FilmModel model = findFilmByIdWhichWillReturnModel(id);
 
-        List<FilmModel> films = model.getFilms();
+        List<DirectorModel> directors = model.getDirectors();
 
-        return films.stream()
-                .map(FilmModel::getId)
+        return directors.stream()
+                .map(DirectorModel::getId)
                 .collect(Collectors.toList());
     }
 
-    public List<FilmModel> findFilmModelsByActorsId(List<Long> listFilmId) {
-        List<FilmModel> modelList = new ArrayList<>();
+    public Long findCountriesIdFromFilmModel(FilmModel filmModel) {
+        FilmModel model = findFilmByIdWhichWillReturnModel(filmModel.getId());
 
-        for (Long id : listFilmId) {
-            FilmModel filmById = findFilmByIdWhichWillReturnModel(id);
-            modelList.add(filmById);
-        }
-
-        return modelList;
-    }
-
-    public List<FilmModel> findFilmsByDirectorId(List<Long> listFilmId) {
-        List<FilmModel> modelList = new ArrayList<>();
-
-        for (Long id : listFilmId) {
-            FilmModel model = findFilmByIdWhichWillReturnModel(id);
-            modelList.add(model);
-        }
-
-        return modelList;
-    }
-
-    public List<Long> findFilmsIdFromDirectorModel(Long id) {
-        DirectorModel model = directorMapper.findDirectorByIdWhichWillReturnModel(id);
-
-        List<FilmModel> listFilm = model.getFilms();
-
-        return listFilm.stream()
-                .map(FilmModel::getId)
-                .collect(Collectors.toList());
+        return model.getCountry().getId();
     }
 
     public FilmModel findFilmByIdWhichWillReturnModel(Long id) {

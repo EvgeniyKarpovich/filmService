@@ -33,7 +33,7 @@ public class GenreController {
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the genre was saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the genre saved successfully", HttpStatus.OK);
     }
 
     @GetMapping
@@ -56,14 +56,14 @@ public class GenreController {
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the genre was updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the genre updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         genresService.deleteById(id);
 
-        return new ResponseEntity<>("the genre was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the genre deleted successfully", HttpStatus.OK);
     }
 
 }

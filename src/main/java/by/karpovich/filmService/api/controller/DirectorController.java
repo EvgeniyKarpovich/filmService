@@ -41,7 +41,7 @@ public class DirectorController {
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the director was saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the director saved successfully", HttpStatus.OK);
     }
 
     @GetMapping
@@ -65,13 +65,13 @@ public class DirectorController {
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the director was updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the director updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         directorService.deleteById(id);
 
-        return new ResponseEntity<>("the director was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the director deleted successfully", HttpStatus.OK);
     }
 }

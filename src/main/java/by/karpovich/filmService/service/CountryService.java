@@ -37,7 +37,7 @@ public class CountryService {
         CountryModel entity = countryMapper.mapModelFromDto(dto);
         CountryModel savedCountry = countryRepository.save(entity);
 
-        log.info("method save - the country with name '{}' was saved", dto.getName());
+        log.info("method save - the country with name '{}' saved", dto.getName());
 
         return countryMapper.mapDtoFromModel(savedCountry);
     }
@@ -45,9 +45,9 @@ public class CountryService {
     public CountryDto findById(Long id) {
         Optional<CountryModel> model = countryRepository.findById(id);
         CountryModel country = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the country with id = %s was not found", id)));
+                () -> new NotFoundModelException(String.format("the country with id = %s not found", id)));
 
-        log.info("method findById - the country was founded with id = {} ", country.getId());
+        log.info("method findById - the country found with id = {} ", country.getId());
 
         return countryMapper.mapDtoFromModel(country);
     }
@@ -76,7 +76,7 @@ public class CountryService {
         country.setId(id);
         CountryModel updated = countryRepository.save(country);
 
-        log.info("method update - the country {} was updated", dto.getName());
+        log.info("method update - the country {} updated", dto.getName());
 
         return countryMapper.mapDtoFromModel(updated);
     }
@@ -85,7 +85,7 @@ public class CountryService {
         if (countryRepository.findById(id).isPresent()) {
             countryRepository.deleteById(id);
         } else {
-            throw new NotFoundModelException(String.format(" the country with id = %s was not found", id));
+            throw new NotFoundModelException(String.format(" the country with id = %s not found", id));
         }
         log.info("method deleteById - the country with id = {} deleted", id);
     }
@@ -109,4 +109,12 @@ public class CountryService {
                 .filter(model -> model.getName().matches("(?i).*" + name + ".*"))
                 .collect(Collectors.toList());
     }
+
+    public CountryModel findCountryByIdWhichWillReturnModel(Long id) {
+        Optional<CountryModel> model = countryRepository.findById(id);
+
+        return model.orElseThrow(
+                () -> new NotFoundModelException("the country with ID = " + id + " not found"));
+    }
+
 }

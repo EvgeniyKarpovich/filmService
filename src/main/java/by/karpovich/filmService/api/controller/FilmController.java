@@ -42,7 +42,7 @@ public class FilmController {
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the film was saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the film saved successfully", HttpStatus.OK);
     }
 
     @GetMapping
@@ -144,13 +144,13 @@ public class FilmController {
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the film was updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the film updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         filmService.deleteById(id);
 
-        return new ResponseEntity<>("the film was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the film deleted successfully", HttpStatus.OK);
     }
 }

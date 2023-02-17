@@ -41,7 +41,7 @@ public class ActorController {
         if (savedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the actor was saved successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the actor saved successfully", HttpStatus.OK);
     }
 
     @GetMapping
@@ -78,14 +78,14 @@ public class ActorController {
         if (updatedDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("the actor was updated successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the actor updated successfully", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         actorService.deleteById(id);
 
-        return new ResponseEntity<>("the actor was deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>("the actor deleted successfully", HttpStatus.OK);
     }
 
 }

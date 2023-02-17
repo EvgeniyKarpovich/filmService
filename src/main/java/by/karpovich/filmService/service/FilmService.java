@@ -38,8 +38,8 @@ public class FilmService {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         FilmModel filmModel = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the film with id = %s was not found", id)));
-        log.info("method findById - the film was founded with id = {} ", filmModel.getId());
+                () -> new NotFoundModelException(String.format("the film with id = %s not found", id)));
+        log.info("method findById - the film found with id = {} ", filmModel.getId());
 
         return filmMapper.mapDtoWithImageFromModel(filmModel);
     }
@@ -50,7 +50,7 @@ public class FilmService {
         FilmModel filmModel = filmMapper.mapModelFromDto(filmDto, file);
         FilmModel save = filmRepository.save(filmModel);
 
-        log.info("method save - the film with name '{}' was saved", filmDto.getName());
+        log.info("method save - the film with name '{}' saved", filmDto.getName());
 
         return filmMapper.mapDtoWithImageFromModel(save);
     }
@@ -100,7 +100,7 @@ public class FilmService {
         filmModel.setId(id);
         FilmModel updatedModel = filmRepository.save(filmModel);
 
-        log.info("method update - the film {} was updated", dto.getName());
+        log.info("method update - the film {} updated", dto.getName());
 
         return filmMapper.mapDtoWithImageFromModel(updatedModel);
     }
@@ -109,7 +109,7 @@ public class FilmService {
         if (filmRepository.findById(id).isPresent()) {
             filmRepository.deleteById(id);
         } else {
-            throw new NotFoundModelException(String.format(" the film with id = %s was not found", id));
+            throw new NotFoundModelException(String.format(" the film with id = %s  not found", id));
         }
         log.info("method deleteById - the film with id = {} deleted", id);
     }
@@ -210,5 +210,12 @@ public class FilmService {
         if (filmModel.isPresent() && !filmModel.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the film with id = %s already exist", filmModel.get().getId()));
         }
+    }
+
+    public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
+        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
+
+        return optionalCountry.orElseThrow(
+                () -> new NotFoundModelException("the film with ID = " + id + " not found"));
     }
 }

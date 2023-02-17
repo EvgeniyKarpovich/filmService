@@ -37,7 +37,7 @@ public class CareerService {
         CareerModel entity = careerMapper.mapModelFromDto(dto);
         CareerModel savedCareer = careerRepository.save(entity);
 
-        log.info("method save - the career with name '{}' was saved", dto.getName());
+        log.info("method save - the career with name '{}' saved", dto.getName());
 
         return careerMapper.mapDtoFromModel(savedCareer);
     }
@@ -46,9 +46,9 @@ public class CareerService {
         Optional<CareerModel> optionalCountry = careerRepository.findById(id);
 
         CareerModel careerModel = optionalCountry.orElseThrow(
-                () -> new NotFoundModelException(String.format("the career with id = %s was not found", id)));
+                () -> new NotFoundModelException(String.format("the career with id = %s not found", id)));
 
-        log.info("method findById - the career was founded with id = {} ", careerModel.getId());
+        log.info("method findById - the career found with id = {} ", careerModel.getId());
 
         return careerMapper.mapDtoFromModel(careerModel);
     }
@@ -77,7 +77,7 @@ public class CareerService {
         career.setId(id);
         CareerModel updated = careerRepository.save(career);
 
-        log.info("method update - the career {} was updated", dto.getName());
+        log.info("method update - the career {} updated", dto.getName());
 
         return careerMapper.mapDtoFromModel(updated);
     }
@@ -86,7 +86,7 @@ public class CareerService {
         if (careerRepository.findById(id).isPresent()) {
             careerRepository.deleteById(id);
         } else {
-            throw new NotFoundModelException(String.format(" the career with id = %s was not found", id));
+            throw new NotFoundModelException(String.format(" the career with id = %s  not found", id));
         }
         log.info("method deleteById - career with id = {} deleted", id);
     }

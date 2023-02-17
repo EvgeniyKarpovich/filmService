@@ -35,9 +35,9 @@ public class DirectorService {
     public DirectorDtoWithAvatar findById(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
         DirectorModel model = directorModel.orElseThrow(
-                () -> new NotFoundModelException(String.format("the director with id = %s was not found", id)));
+                () -> new NotFoundModelException(String.format("the director with id = %s not found", id)));
 
-        log.info("method findById - the director was founded with id = {} ", model.getId());
+        log.info("method findById - the director found with id = {} ", model.getId());
 
         return directorMapper.mapDtoWithImageFromModel(model);
     }
@@ -48,7 +48,7 @@ public class DirectorService {
         DirectorModel model = directorMapper.mapModelFromDto(dto, file);
         DirectorModel save = directorRepository.save(model);
 
-        log.info("method save - the director with name '{}' was saved", dto.getName());
+        log.info("method save - the director with name '{}' saved", dto.getName());
 
         return directorMapper.mapDtoWithImageFromModel(save);
     }
@@ -77,7 +77,7 @@ public class DirectorService {
         model.setId(id);
         DirectorModel save = directorRepository.save(model);
 
-        log.info("method update - the director {} was updated", dto.getName());
+        log.info("method update - the director {} updated", dto.getName());
 
         return directorMapper.mapDtoWithImageFromModel(save);
     }
@@ -86,7 +86,7 @@ public class DirectorService {
         if (directorRepository.findById(id).isPresent()) {
             directorRepository.deleteById(id);
         } else {
-            throw new NotFoundModelException(String.format(" the director with id = %s was not found", id));
+            throw new NotFoundModelException(String.format(" the director with id = %s  not found", id));
         }
         log.info("method deleteById - the director with id = {} deleted", id);
     }
