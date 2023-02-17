@@ -96,11 +96,4 @@ public class GenresService {
             throw new DuplicateException(String.format("the genre with id = %s already exist", id));
         }
     }
-
-    public GenreModel findByIdWhichWillReturnModel(Long id) {
-        Optional<GenreModel> genreModel = genreRepository.findById(id);
-
-        return genreModel.orElseThrow(
-                () -> new NotFoundModelException("the genre with ID = " + id + " was not found"));
-    }
 }

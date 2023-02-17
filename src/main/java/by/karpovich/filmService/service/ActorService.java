@@ -2,11 +2,9 @@ package by.karpovich.filmService.service;
 
 import by.karpovich.filmService.api.dto.actorDto.ActorDto;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
-import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
-import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.repository.ActorRepository;
 import by.karpovich.filmService.mapping.ActorMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -119,12 +117,5 @@ public class ActorService {
         if (model.isPresent() && !model.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the actor with id = %s already exist", id));
         }
-    }
-
-    public ActorModel findByIdWhichWillReturnModel(Long id) {
-        Optional<ActorModel> model = actorRepository.findById(id);
-
-        return model.orElseThrow(
-                () -> new NotFoundModelException("the actor with ID = " + id + " was not found"));
     }
 }

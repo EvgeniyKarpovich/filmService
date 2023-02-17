@@ -4,7 +4,6 @@ import by.karpovich.filmService.api.dto.genreDto.GenreDto;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.model.GenreModel;
-import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.jpa.repository.GenreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ public class GenreMapper {
     @Autowired
     private GenreRepository genreRepository;
     @Autowired
-    private FilmRepository filmRepository;
+    private FilmMapper filmMapper;
 
     public GenreDto mapDtoFromModel(GenreModel model) {
         if (model == null) {
@@ -31,7 +30,7 @@ public class GenreMapper {
 
         dto.setId(model.getId());
         dto.setName(model.getName());
-        dto.setFilmsId(findFilmIdFromGenreModel(model.getId()));
+        dto.setFilmsId(filmMapper.findFilmIdFromGenreModel(model.getId()));
 
         return dto;
     }
@@ -44,7 +43,7 @@ public class GenreMapper {
         GenreModel model = new GenreModel();
 
         model.setName(dto.getName());
-        model.setFilms(findListFilmsByGenreId(dto.getFilmsId()));
+        model.setFilms(filmMapper.findFilmsByGenreId(dto.getFilmsId()));
 
         return model;
     }
@@ -62,39 +61,31 @@ public class GenreMapper {
         return genreDtoList;
     }
 
-    private List<Long> findFilmIdFromGenreModel(Long id) {
-        GenreModel genreModel = findGenreByIdWhichWillReturnModel(id);
+    public List<GenreModel> findGenreModelsByGenreId(List<Long> listGenresId) {
+        List<GenreModel> genreModels = new ArrayList<>();
 
-        List<FilmModel> films = genreModel.getFilms();
+        for (Long id : listGenresId) {
+            GenreModel model = findGenreByIdWhichWillReturnModel(id);
+            genreModels.add(model);
+        }
 
-        return films.stream()
-                .map(FilmModel::getId)
+        return genreModels;
+    }
+
+    public List<Long> findGenresIdFromFilmModel(Long id) {
+        FilmModel model = filmMapper.findFilmByIdWhichWillReturnModel(id);
+
+        List<GenreModel> genres = model.getGenres();
+
+        return genres.stream()
+                .map(GenreModel::getId)
                 .collect(Collectors.toList());
     }
 
-    private List<FilmModel> findListFilmsByGenreId(List<Long> listFilmId) {
-        List<FilmModel> filmModelList = new ArrayList<>();
-
-        for (Long id : listFilmId) {
-            FilmModel model = findFilmByIdWhichWillReturnModel(id);
-            filmModelList.add(model);
-        }
-
-        return filmModelList;
-    }
-
-    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
-
-        return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
-    }
-
-    private GenreModel findGenreByIdWhichWillReturnModel(Long id) {
+    public GenreModel findGenreByIdWhichWillReturnModel(Long id) {
         Optional<GenreModel> genreModel = genreRepository.findById(id);
 
         return genreModel.orElseThrow(
                 () -> new NotFoundModelException("the genre with ID = " + id + " was not found"));
     }
-
 }

@@ -98,11 +98,4 @@ public class DirectorService {
             throw new DuplicateException(String.format("the director with id = %s already exist", id));
         }
     }
-
-    public DirectorModel findByIdWhichWillReturnModel(Long id) {
-        Optional<DirectorModel> directorModel = directorRepository.findById(id);
-
-        return directorModel.orElseThrow(
-                () -> new NotFoundModelException("the country with ID = " + id + " was not found"));
-    }
 }

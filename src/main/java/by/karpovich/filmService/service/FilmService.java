@@ -1,8 +1,8 @@
 package by.karpovich.filmService.service;
 
+import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.api.dto.filmDto.FilmDto;
 import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
-import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.FilmModel;
@@ -210,12 +210,5 @@ public class FilmService {
         if (filmModel.isPresent() && !filmModel.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the film with id = %s already exist", filmModel.get().getId()));
         }
-    }
-
-    public FilmModel findByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
-
-        return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the film with ID = " + id + " was not found"));
     }
 }

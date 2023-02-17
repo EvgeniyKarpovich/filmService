@@ -6,10 +6,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Utils {
 
-    private static final String PATTERN_FORMAT = "dd MMMM yyyy";
-
     public static String mapStringFromInstant(Instant instant) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_FORMAT)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constant.DATE_STRING)
                 .withZone(ZoneId.systemDefault());
 
         Instant date = Instant.parse(instant.toString());
