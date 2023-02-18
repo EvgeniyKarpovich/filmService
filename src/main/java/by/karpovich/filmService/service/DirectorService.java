@@ -37,7 +37,7 @@ public class DirectorService {
         DirectorModel model = directorModel.orElseThrow(
                 () -> new NotFoundModelException(String.format("the director with id = %s not found", id)));
 
-        log.info("method findById - the director found with id = {} ", model.getId());
+        log.info("method findById - the director found with id = {} ", id);
 
         return directorMapper.mapDtoWithImageFromModel(model);
     }
@@ -48,7 +48,7 @@ public class DirectorService {
         DirectorModel model = directorMapper.mapModelFromDto(dto, file);
         DirectorModel save = directorRepository.save(model);
 
-        log.info("method save - the director with name '{}' saved", dto.getName());
+        log.info("method save - the director with name {} saved", dto.getName());
 
         return directorMapper.mapDtoWithImageFromModel(save);
     }
@@ -58,14 +58,16 @@ public class DirectorService {
         Page<DirectorModel> directorModelPage = directorRepository.findAll(pageable);
         List<DirectorModel> content = directorModelPage.getContent();
 
-        List<DirectorDtoWithAvatar> actorDtoList = directorMapper.mapListDtoWithAvatarFromListModel(content);
+        List<DirectorDtoWithAvatar> directorDtoWithAvatars = directorMapper.mapListDtoWithAvatarFromListModel(content);
 
         Map<String, Object> response = new HashMap<>();
 
-        response.put("Directors", actorDtoList);
+        response.put("Directors", directorDtoWithAvatars);
         response.put("currentPage", directorModelPage.getNumber());
         response.put("totalItems", directorModelPage.getTotalElements());
         response.put("totalPages", directorModelPage.getTotalPages());
+
+        log.info("method save - the number of directors  found {} ", directorDtoWithAvatars.size());
 
         return response;
     }
@@ -77,7 +79,7 @@ public class DirectorService {
         model.setId(id);
         DirectorModel save = directorRepository.save(model);
 
-        log.info("method update - the director {} updated", dto.getName());
+        log.info("method update - the director with id = {} updated", id);
 
         return directorMapper.mapDtoWithImageFromModel(save);
     }

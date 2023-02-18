@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/countries")
@@ -21,9 +20,8 @@ public class CountryController {
     }
 
     @GetMapping
-    public Map<String, Object> findAll(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
-        return countryService.findAll(page, size);
+    public List<CountryDto> findAll() {
+        return countryService.findAll();
     }
 
     @PostMapping

@@ -8,16 +8,10 @@ import by.karpovich.filmService.jpa.repository.CareerRepository;
 import by.karpovich.filmService.mapping.CareerMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,7 +31,7 @@ public class CareerService {
         CareerModel entity = careerMapper.mapModelFromDto(dto);
         CareerModel savedCareer = careerRepository.save(entity);
 
-        log.info("method save - the career with name '{}' saved", dto.getName());
+        log.info("method save - the career with name {} saved", dto.getName());
 
         return careerMapper.mapDtoFromModel(savedCareer);
     }
@@ -48,26 +42,17 @@ public class CareerService {
         CareerModel careerModel = optionalCountry.orElseThrow(
                 () -> new NotFoundModelException(String.format("the career with id = %s not found", id)));
 
-        log.info("method findById - the career found with id = {} ", careerModel.getId());
+        log.info("method findById - the career found with id = {} ", id);
 
         return careerMapper.mapDtoFromModel(careerModel);
     }
 
-    public Map<String, Object> findAll(int page, int size) {
+    public List<CareerDto> findAll() {
+        List<CareerModel> careers = careerRepository.findAll();
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<CareerModel> CareerModelPage = careerRepository.findAll(pageable);
-        List<CareerModel> content = CareerModelPage.getContent();
+        log.info("method findAll - the number of career found  = {} ", careers.size());
 
-        List<CareerDto> CareerDtoList = careerMapper.mapListDtoFromListModel(content);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("Careers", CareerDtoList);
-        response.put("currentPage", CareerModelPage.getNumber());
-        response.put("totalItems", CareerModelPage.getTotalElements());
-        response.put("totalPages", CareerModelPage.getTotalPages());
-
-        return response;
+        return careerMapper.mapListDtoFromListModel(careers);
     }
 
     public CareerDto update(Long id, CareerDto dto) {
@@ -77,7 +62,7 @@ public class CareerService {
         career.setId(id);
         CareerModel updated = careerRepository.save(career);
 
-        log.info("method update - the career {} updated", dto.getName());
+        log.info("method update - the career with id =  {} updated", id);
 
         return careerMapper.mapDtoFromModel(updated);
     }
@@ -95,7 +80,7 @@ public class CareerService {
         Optional<CareerModel> model = careerRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the career with id = %s already exist", id));
+            throw new DuplicateException(String.format("the career with name = %s already exist", dto.getName()));
         }
     }
 
@@ -103,6 +88,8 @@ public class CareerService {
 
         List<CareerModel> careerModels = careerRepository.findAll();
         List<CareerModel> careerFilterByName = findByName(careerModels, name);
+
+        log.info("method findByName - the number of careers = {}", careerFilterByName.size());
 
         return careerMapper.mapListDtoFromListModel(careerFilterByName);
     }
@@ -112,5 +99,4 @@ public class CareerService {
                 .filter(model -> model.getName().matches("(?i).*" + name + ".*"))
                 .collect(Collectors.toList());
     }
-
 }

@@ -39,6 +39,7 @@ public class FilmService {
 
         FilmModel filmModel = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the film with id = %s not found", id)));
+
         log.info("method findById - the film found with id = {} ", filmModel.getId());
 
         return filmMapper.mapDtoWithImageFromModel(filmModel);
@@ -50,7 +51,7 @@ public class FilmService {
         FilmModel filmModel = filmMapper.mapModelFromDto(filmDto, file);
         FilmModel save = filmRepository.save(filmModel);
 
-        log.info("method save - the film with name '{}' saved", filmDto.getName());
+        log.info("method save - the film with name {} saved", filmDto.getName());
 
         return filmMapper.mapDtoWithImageFromModel(save);
     }
@@ -69,7 +70,7 @@ public class FilmService {
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
-        log.info("IN findAll - the number of films according to these criteria = {}", filmDtoList.size());
+        log.info("method findAll - the number of films = {}", filmDtoList.size());
 
         return response;
     }
@@ -88,7 +89,7 @@ public class FilmService {
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
-        log.info("method findAllByCriteria  - the number of films according to these criteria = {}", filmDtoList.size());
+        log.info("method findAllByCriteria  - the number of films  = {}", filmDtoList.size());
 
         return response;
     }
@@ -100,7 +101,7 @@ public class FilmService {
         filmModel.setId(id);
         FilmModel updatedModel = filmRepository.save(filmModel);
 
-        log.info("method update - the film {} updated", dto.getName());
+        log.info("method update - the film with id =  {} updated", id);
 
         return filmMapper.mapDtoWithImageFromModel(updatedModel);
     }
@@ -200,7 +201,7 @@ public class FilmService {
         response.put("totalItems", filmModelPageModelPage.getTotalElements());
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
-        log.info("method findFilmsByName  - the number of films with name = {}", filmDtoList.size());
+        log.info("method findFilmsByName  - the number of films = {}", filmDtoList.size());
 
         return response;
     }

@@ -8,16 +8,10 @@ import by.karpovich.filmService.jpa.repository.GenreRepository;
 import by.karpovich.filmService.mapping.GenreMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -46,26 +40,17 @@ public class GenresService {
         GenreModel model = genreMapper.mapModelFromDto(dto);
         GenreModel savedModel = genreRepository.save(model);
 
-        log.info("method save - the genre with name '{}' saved", dto.getName());
+        log.info("method save - the genre with name {} saved", dto.getName());
 
         return genreMapper.mapDtoFromModel(savedModel);
     }
 
-    public Map<String, Object> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<GenreModel> genreModelPage = genreRepository.findAll(pageable);
-        List<GenreModel> content = genreModelPage.getContent();
+    public List<GenreDto> findAll() {
+        List<GenreModel> genres = genreRepository.findAll();
 
-        List<GenreDto> genreDtoList = genreMapper.mapListDtoFromListModel(content);
+        log.info("method findAll - the genres found {} ", genres.size());
 
-        Map<String, Object> response = new HashMap<>();
-
-        response.put("Genres", genreDtoList);
-        response.put("currentPage", genreModelPage.getNumber());
-        response.put("totalItems", genreModelPage.getTotalElements());
-        response.put("totalPages", genreModelPage.getTotalPages());
-
-        return response;
+        return genreMapper.mapListDtoFromListModel(genres);
     }
 
     public GenreDto update(GenreDto dto, Long id) {
@@ -75,7 +60,7 @@ public class GenresService {
         model.setId(id);
         GenreModel save = genreRepository.save(model);
 
-        log.info("method update - the genre {} updated", dto.getName());
+        log.info("method update - the genre with id = {} updated", id);
 
         return genreMapper.mapDtoFromModel(save);
     }

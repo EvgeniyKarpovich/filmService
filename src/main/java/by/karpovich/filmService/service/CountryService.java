@@ -8,16 +8,10 @@ import by.karpovich.filmService.jpa.repository.CountryRepository;
 import by.karpovich.filmService.mapping.CountryMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,7 +31,7 @@ public class CountryService {
         CountryModel entity = countryMapper.mapModelFromDto(dto);
         CountryModel savedCountry = countryRepository.save(entity);
 
-        log.info("method save - the country with name '{}' saved", dto.getName());
+        log.info("method save - the country with name {} saved", dto.getName());
 
         return countryMapper.mapDtoFromModel(savedCountry);
     }
@@ -47,26 +41,17 @@ public class CountryService {
         CountryModel country = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the country with id = %s not found", id)));
 
-        log.info("method findById - the country found with id = {} ", country.getId());
+        log.info("method findById - the country found with id = {} ", id);
 
         return countryMapper.mapDtoFromModel(country);
     }
 
-    public Map<String, Object> findAll(int page, int size) {
+    public List<CountryDto> findAll() {
+        List<CountryModel> countries = countryRepository.findAll();
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<CountryModel> countryModelPage = countryRepository.findAll(pageable);
-        List<CountryModel> content = countryModelPage.getContent();
+        log.info("method findAll - the number of countries found  = {} ", countries.size());
 
-        List<CountryDto> countryDtoList = countryMapper.mapListDtoFromListModel(content);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("Countries", countryDtoList);
-        response.put("currentPage", countryModelPage.getNumber());
-        response.put("totalItems", countryModelPage.getTotalElements());
-        response.put("totalPages", countryModelPage.getTotalPages());
-
-        return response;
+        return countryMapper.mapListDtoFromListModel(countries);
     }
 
     public CountryDto update(Long id, CountryDto dto) {
@@ -101,6 +86,8 @@ public class CountryService {
         List<CountryModel> countryModels = countryRepository.findAll();
         List<CountryModel> countriesFilterByName = findByNameCountry(countryModels, name);
 
+        log.info("method findByName - the number of countries found = {} ", countriesFilterByName.size());
+
         return countryMapper.mapListDtoFromListModel(countriesFilterByName);
     }
 
@@ -116,5 +103,4 @@ public class CountryService {
         return model.orElseThrow(
                 () -> new NotFoundModelException("the country with ID = " + id + " not found"));
     }
-
 }

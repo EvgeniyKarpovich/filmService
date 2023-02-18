@@ -49,7 +49,7 @@ public class ActorService {
         ActorModel model = actorMapper.mapModelFromDto(dto, file);
         ActorModel save = actorRepository.save(model);
 
-        log.info("method save - the actor with name '{}' saved", dto.getName());
+        log.info("method save - the actor with name = {} saved", dto.getName());
 
         return actorMapper.mapDtoWithImageFromModel(save);
     }
@@ -68,6 +68,8 @@ public class ActorService {
         response.put("totalItems", actorModelPage.getTotalElements());
         response.put("totalPages", actorModelPage.getTotalPages());
 
+        log.info("method findAll - the number of actors = {}", actorDtoList.size());
+
         return response;
     }
 
@@ -78,7 +80,7 @@ public class ActorService {
         model.setId(id);
         ActorModel save = actorRepository.save(model);
 
-        log.info("method update - the actor {} updated", dto.getName());
+        log.info("method update - the actor with id = {} updated", id);
 
         return actorMapper.mapDtoWithImageFromModel(save);
     }
@@ -106,7 +108,7 @@ public class ActorService {
         response.put("totalItems", actorModelPage.getTotalElements());
         response.put("totalPages", actorModelPage.getTotalPages());
 
-        log.info("method findActorsByName  - the number of actors with name = {}", actorDtoWithAvatars.size());
+        log.info("method findActorsByName  - the number of actors = {}", actorDtoWithAvatars.size());
 
         return response;
     }
@@ -115,7 +117,7 @@ public class ActorService {
         Optional<ActorModel> model = actorRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the actor with id = %s already exist", id));
+            throw new DuplicateException(String.format("the actor with name = %s already exist", dto.getName()));
         }
     }
 }

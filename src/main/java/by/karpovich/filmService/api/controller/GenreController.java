@@ -5,7 +5,7 @@ import by.karpovich.filmService.service.GenresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/genres")
@@ -25,9 +25,8 @@ public class GenreController {
     }
 
     @GetMapping
-    public Map<String, Object> findAll(@RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "20") int size) {
-        return genresService.findAll(page, size);
+    public List<GenreDto> findAll() {
+        return genresService.findAll();
     }
 
     @PutMapping("/{id}")
