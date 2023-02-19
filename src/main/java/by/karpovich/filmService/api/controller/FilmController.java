@@ -1,7 +1,8 @@
 package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
-import by.karpovich.filmService.api.dto.filmDto.FilmDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmDtoForSaveUpdate;
+import by.karpovich.filmService.api.dto.filmDto.FilmOutDto;
 import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.service.FilmService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,13 +23,13 @@ public class FilmController {
     private FilmService filmService;
 
     @GetMapping("/{id}")
-    public FilmWithPosterDto findById(@PathVariable("id") Long id) {
+    public FilmOutDto findById(@PathVariable("id") Long id) {
         return filmService.findById(id);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FilmWithPosterDto save(@Valid @RequestPart(value = "dto")
-                                  @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDto dto,
+                                  @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDtoForSaveUpdate dto,
                                   @RequestPart("file") MultipartFile file) {
         return filmService.save(dto, file);
     }
@@ -83,7 +84,7 @@ public class FilmController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FilmWithPosterDto update(@Valid @RequestPart(value = "dto")
-                                    @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDto dto,
+                                    @Parameter(schema = @Schema(type = "string", format = "binary")) FilmDtoForSaveUpdate dto,
                                     @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         return filmService.update(dto, id, file);
     }

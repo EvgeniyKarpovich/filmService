@@ -11,9 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FilmWithPosterDto {
-
-    private Long id;
+public class FilmOutDto {
 
     private String name;
 
@@ -25,17 +23,17 @@ public class FilmWithPosterDto {
 
     private String releaseDate;
 
-    private Long countryId;
+    private String countryName;
 
-    private List<Long> directorsId;
+    private List<String> directorsName;
 
-    private List<Long> genresId;
+    private List<String> genresName;
 
     private String ageLimit;
 
     private int durationInMinutes;
 
-    private List<Long> actorsId;
+    private List<String> actorsName;
 
     private String description;
 }

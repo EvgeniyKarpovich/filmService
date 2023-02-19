@@ -1,7 +1,9 @@
 package by.karpovich.filmService.service;
 
 import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
-import by.karpovich.filmService.api.dto.filmDto.FilmDto;
+import by.karpovich.filmService.api.dto.filmDto.FilmDtoForFindAll;
+import by.karpovich.filmService.api.dto.filmDto.FilmDtoForSaveUpdate;
+import by.karpovich.filmService.api.dto.filmDto.FilmOutDto;
 import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
@@ -34,7 +36,7 @@ public class FilmService {
     @Autowired
     private FilmMapper filmMapper;
 
-    public FilmWithPosterDto findById(Long id) {
+    public FilmOutDto findById(Long id) {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         FilmModel filmModel = model.orElseThrow(
@@ -42,13 +44,13 @@ public class FilmService {
 
         log.info("method findById - the film found with id = {} ", filmModel.getId());
 
-        return filmMapper.mapDtoWithImageFromModel(filmModel);
+        return filmMapper.mapFilmOutDtoFromFilmModel(filmModel);
     }
 
-    public FilmWithPosterDto save(FilmDto filmDto, MultipartFile file) {
-        validateAlreadyExists(filmDto, null);
+    public FilmWithPosterDto save(FilmDtoForSaveUpdate dto, MultipartFile file) {
+        validateAlreadyExists(dto, null);
 
-        FilmModel filmModel = filmMapper.mapModelFromDto(filmDto, file);
+        FilmModel filmModel = filmMapper.mapModelFromDto(dto, file);
         FilmModel save = filmRepository.save(filmModel);
 
         log.info("method save - the film with name {} saved", save.getName());
@@ -56,45 +58,7 @@ public class FilmService {
         return filmMapper.mapDtoWithImageFromModel(save);
     }
 
-    //find all sort by rating
-    public Map<String, Object> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
-        Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(pageable);
-        List<FilmModel> content = filmModelPageModelPage.getContent();
-
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("Films", filmDtoList);
-        response.put("currentPage", filmModelPageModelPage.getNumber());
-        response.put("totalItems", filmModelPageModelPage.getTotalElements());
-        response.put("totalPages", filmModelPageModelPage.getTotalPages());
-
-        log.info("method findAll - the number of films = {}", filmDtoList.size());
-
-        return response;
-    }
-
-    //find by criteria sort by rating
-    public Map<String, Object> findAllByCriteria(FilmDtoCriteria filmSearchCriteriaDto, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
-        Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(FilmSpecificationUtils.createFromCriteria(filmSearchCriteriaDto), pageable);
-        List<FilmModel> content = filmModelPageModelPage.getContent();
-
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("Films", filmDtoList);
-        response.put("currentPage", filmModelPageModelPage.getNumber());
-        response.put("totalItems", filmModelPageModelPage.getTotalElements());
-        response.put("totalPages", filmModelPageModelPage.getTotalPages());
-
-        log.info("method findAllByCriteria  - the number of films  = {}", filmDtoList.size());
-
-        return response;
-    }
-
-    public FilmWithPosterDto update(FilmDto dto, Long id, MultipartFile file) {
+    public FilmWithPosterDto update(FilmDtoForSaveUpdate dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
         FilmModel filmModel = filmMapper.mapModelFromDto(dto, file);
@@ -115,12 +79,50 @@ public class FilmService {
         log.info("method deleteById - the film with id = {} deleted", id);
     }
 
+    //find all sort by rating
+    public Map<String, Object> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
+        Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(pageable);
+        List<FilmModel> content = filmModelPageModelPage.getContent();
+
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("Films", filmDtoList);
+        response.put("currentPage", filmModelPageModelPage.getNumber());
+        response.put("totalItems", filmModelPageModelPage.getTotalElements());
+        response.put("totalPages", filmModelPageModelPage.getTotalPages());
+
+        log.info("method findAll - the number of films = {}", filmDtoList.size());
+
+        return response;
+    }
+
+    //find by criteria sort by rating
+    public Map<String, Object> findAllByCriteria(FilmDtoCriteria filmSearchCriteriaDto, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
+        Page<FilmModel> filmModelPageModelPage = filmRepository.findAll(FilmSpecificationUtils.createFromCriteria(filmSearchCriteriaDto), pageable);
+        List<FilmModel> content = filmModelPageModelPage.getContent();
+
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("Films", filmDtoList);
+        response.put("currentPage", filmModelPageModelPage.getNumber());
+        response.put("totalItems", filmModelPageModelPage.getTotalElements());
+        response.put("totalPages", filmModelPageModelPage.getTotalPages());
+
+        log.info("method findAllByCriteria  - the number of films  = {}", filmDtoList.size());
+
+        return response;
+    }
+
     public Map<String, Object> findAllFilmsByGenreId(Long genreId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("ratingIMDB").descending());
         Page<FilmModel> filmModelPageModelPage = filmRepository.findByGenresId(genreId, pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
 
         Map<String, Object> response = new HashMap<>();
         response.put("Films", filmDtoList);
@@ -138,7 +140,7 @@ public class FilmService {
         Page<FilmModel> filmModelPageModelPage = filmRepository.findByActorsId(genreId, pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
 
         Map<String, Object> response = new HashMap<>();
         response.put("Films", filmDtoList);
@@ -156,7 +158,7 @@ public class FilmService {
         Page<FilmModel> filmModelPageModelPage = filmRepository.findByCountryId(countryId, pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
 
         Map<String, Object> response = new HashMap<>();
         response.put("Films", filmDtoList);
@@ -174,7 +176,7 @@ public class FilmService {
         Page<FilmModel> filmModelPageModelPage = filmRepository.findByDirectorsId(directorId, pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
 
         Map<String, Object> response = new HashMap<>();
         response.put("Films", filmDtoList);
@@ -193,7 +195,7 @@ public class FilmService {
         Page<FilmModel> filmModelPageModelPage = filmRepository.findByNameContainingIgnoreCase(name, pageable);
         List<FilmModel> content = filmModelPageModelPage.getContent();
 
-        List<FilmWithPosterDto> filmDtoList = filmMapper.mapListDtoWithImageFromListModel(content);
+        List<FilmDtoForFindAll> filmDtoList = filmMapper.mapListFilmDtoForFindAllFromFilmModels(content);
 
         Map<String, Object> response = new HashMap<>();
         response.put("Films", filmDtoList);
@@ -206,17 +208,10 @@ public class FilmService {
         return response;
     }
 
-    private void validateAlreadyExists(FilmDto filmDto, Long id) {
-        Optional<FilmModel> filmModel = filmRepository.findByNameAndDescription(filmDto.getName(), filmDto.getDescription());
+    private void validateAlreadyExists(FilmDtoForSaveUpdate dto, Long id) {
+        Optional<FilmModel> filmModel = filmRepository.findByNameAndDescription(dto.getName(), dto.getDescription());
         if (filmModel.isPresent() && !filmModel.get().getId().equals(id)) {
             throw new DuplicateException(String.format("the film with id = %s already exist", filmModel.get().getId()));
         }
-    }
-
-    public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> optionalCountry = filmRepository.findById(id);
-
-        return optionalCountry.orElseThrow(
-                () -> new NotFoundModelException("the film with ID = " + id + " not found"));
     }
 }
