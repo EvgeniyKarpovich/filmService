@@ -79,6 +79,6 @@ public class GenreMapper {
         Optional<GenreModel> genreModel = genreRepository.findById(id);
 
         return genreModel.orElseThrow(
-                () -> new NotFoundModelException("the genre with ID = " + id + " not found"));
+                () -> new NotFoundModelException("the genre with id = " + genreModel.get().getId() + " not found"));
     }
 }

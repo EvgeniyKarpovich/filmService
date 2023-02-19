@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidActor {
 
-    String message() default "Actor with this ID does not exist";
+    String message() default "Actor with this id does not exist";
 
     Class<?>[] groups() default {};
 

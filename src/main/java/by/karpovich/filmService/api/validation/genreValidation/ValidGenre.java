@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidGenre {
 
-    String message() default "Genre with this ID does not exist";
+    String message() default "Genre with this id does not exist";
 
     Class<?>[] groups() default {};
 

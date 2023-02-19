@@ -195,6 +195,6 @@ public class FilmMapper {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         return model.orElseThrow(
-                () -> new NotFoundModelException("the actor with ID = " + id + " not found"));
+                () -> new NotFoundModelException("the actor with id = " + model.get().getId() + " not found"));
     }
 }

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidCountry {
 
-    String message() default "Country with this ID does not exist";
+    String message() default "Country with this id does not exist";
 
     Class<?>[] groups() default {};
 

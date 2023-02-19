@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidDirector {
 
-    String message() default "Director with this ID does not exist";
+    String message() default "Director with this id does not exist";
 
     Class<?>[] groups() default {};
 
