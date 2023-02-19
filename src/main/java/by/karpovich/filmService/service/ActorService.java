@@ -36,7 +36,7 @@ public class ActorService {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         ActorModel actorModel = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the actor with id = %s not found", id)));
+                () -> new NotFoundModelException(String.format("the actor with id = %s not found", model.get().getId())));
 
         log.info("method findById - the actor found with id = {} ", actorModel.getId());
 
@@ -49,7 +49,7 @@ public class ActorService {
         ActorModel model = actorMapper.mapModelFromDto(dto, file);
         ActorModel save = actorRepository.save(model);
 
-        log.info("method save - the actor with name = {} saved", dto.getName());
+        log.info("method save - the actor with name = {} saved", save.getName());
 
         return actorMapper.mapDtoWithImageFromModel(save);
     }
@@ -80,7 +80,7 @@ public class ActorService {
         model.setId(id);
         ActorModel save = actorRepository.save(model);
 
-        log.info("method update - the actor with id = {} updated", id);
+        log.info("method update - the actor with id = {} updated", save.getId());
 
         return actorMapper.mapDtoWithImageFromModel(save);
     }
@@ -117,7 +117,7 @@ public class ActorService {
         Optional<ActorModel> model = actorRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the actor with name = %s already exist", dto.getName()));
+            throw new DuplicateException(String.format("the actor with name = %s already exist", model.get().getName()));
         }
     }
 }

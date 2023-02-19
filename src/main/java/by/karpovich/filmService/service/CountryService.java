@@ -31,7 +31,7 @@ public class CountryService {
         CountryModel entity = countryMapper.mapModelFromDto(dto);
         CountryModel savedCountry = countryRepository.save(entity);
 
-        log.info("method save - the country with name {} saved", dto.getName());
+        log.info("method save - the country with name {} saved", savedCountry.getName());
 
         return countryMapper.mapDtoFromModel(savedCountry);
     }
@@ -39,9 +39,9 @@ public class CountryService {
     public CountryDto findById(Long id) {
         Optional<CountryModel> model = countryRepository.findById(id);
         CountryModel country = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the country with id = %s not found", id)));
+                () -> new NotFoundModelException(String.format("the country with id = %s not found", model.get().getId())));
 
-        log.info("method findById - the country found with id = {} ", id);
+        log.info("method findById - the country found with id = {} ", country.getId());
 
         return countryMapper.mapDtoFromModel(country);
     }
@@ -61,7 +61,7 @@ public class CountryService {
         country.setId(id);
         CountryModel updated = countryRepository.save(country);
 
-        log.info("method update - the country {} updated", dto.getName());
+        log.info("method update - the country {} updated", updated.getName());
 
         return countryMapper.mapDtoFromModel(updated);
     }
@@ -78,7 +78,7 @@ public class CountryService {
     private void validateAlreadyExists(CountryDto dto, Long id) {
         Optional<CountryModel> model = countryRepository.findByName(dto.getName());
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the country with id = %s already exist", id));
+            throw new DuplicateException(String.format("the country with name = %s already exist", model.get().getName()));
         }
     }
 

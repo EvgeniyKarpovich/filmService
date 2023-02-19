@@ -38,7 +38,7 @@ public class FilmService {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         FilmModel filmModel = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the film with id = %s not found", id)));
+                () -> new NotFoundModelException(String.format("the film with id = %s not found", model.get().getId())));
 
         log.info("method findById - the film found with id = {} ", filmModel.getId());
 
@@ -51,7 +51,7 @@ public class FilmService {
         FilmModel filmModel = filmMapper.mapModelFromDto(filmDto, file);
         FilmModel save = filmRepository.save(filmModel);
 
-        log.info("method save - the film with name {} saved", filmDto.getName());
+        log.info("method save - the film with name {} saved", save.getName());
 
         return filmMapper.mapDtoWithImageFromModel(save);
     }
@@ -101,7 +101,7 @@ public class FilmService {
         filmModel.setId(id);
         FilmModel updatedModel = filmRepository.save(filmModel);
 
-        log.info("method update - the film with id =  {} updated", id);
+        log.info("method update - the film with id =  {} updated", updatedModel.getId());
 
         return filmMapper.mapDtoWithImageFromModel(updatedModel);
     }

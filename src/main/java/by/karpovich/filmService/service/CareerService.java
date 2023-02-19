@@ -31,18 +31,18 @@ public class CareerService {
         CareerModel entity = careerMapper.mapModelFromDto(dto);
         CareerModel savedCareer = careerRepository.save(entity);
 
-        log.info("method save - the career with name {} saved", dto.getName());
+        log.info("method save - the career with name {} saved", savedCareer.getName());
 
         return careerMapper.mapDtoFromModel(savedCareer);
     }
 
     public CareerDto findById(Long id) {
-        Optional<CareerModel> optionalCountry = careerRepository.findById(id);
+        Optional<CareerModel> career = careerRepository.findById(id);
 
-        CareerModel careerModel = optionalCountry.orElseThrow(
-                () -> new NotFoundModelException(String.format("the career with id = %s not found", id)));
+        CareerModel careerModel = career.orElseThrow(
+                () -> new NotFoundModelException(String.format("the career with id = %s not found", career.get().getName())));
 
-        log.info("method findById - the career found with id = {} ", id);
+        log.info("method findById - the career found with id = {} ", careerModel.getId());
 
         return careerMapper.mapDtoFromModel(careerModel);
     }
@@ -62,7 +62,7 @@ public class CareerService {
         career.setId(id);
         CareerModel updated = careerRepository.save(career);
 
-        log.info("method update - the career with id =  {} updated", id);
+        log.info("method update - the career with id =  {} updated", updated.getId());
 
         return careerMapper.mapDtoFromModel(updated);
     }
@@ -80,7 +80,7 @@ public class CareerService {
         Optional<CareerModel> model = careerRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the career with name = %s already exist", dto.getName()));
+            throw new DuplicateException(String.format("the career with name = %s already exist", model.get().getName()));
         }
     }
 

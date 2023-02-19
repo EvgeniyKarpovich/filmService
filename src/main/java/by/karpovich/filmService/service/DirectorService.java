@@ -35,9 +35,9 @@ public class DirectorService {
     public DirectorDtoWithAvatar findById(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
         DirectorModel model = directorModel.orElseThrow(
-                () -> new NotFoundModelException(String.format("the director with id = %s not found", id)));
+                () -> new NotFoundModelException(String.format("the director with id = %s not found", directorModel.get().getId())));
 
-        log.info("method findById - the director found with id = {} ", id);
+        log.info("method findById - the director found with id = {} ", model.getId());
 
         return directorMapper.mapDtoWithImageFromModel(model);
     }
@@ -48,7 +48,7 @@ public class DirectorService {
         DirectorModel model = directorMapper.mapModelFromDto(dto, file);
         DirectorModel save = directorRepository.save(model);
 
-        log.info("method save - the director with name {} saved", dto.getName());
+        log.info("method save - the director with name {} saved", save.getName());
 
         return directorMapper.mapDtoWithImageFromModel(save);
     }
@@ -77,11 +77,11 @@ public class DirectorService {
 
         DirectorModel model = directorMapper.mapModelFromDto(dto, file);
         model.setId(id);
-        DirectorModel save = directorRepository.save(model);
+        DirectorModel update = directorRepository.save(model);
 
-        log.info("method update - the director with id = {} updated", id);
+        log.info("method update - the director with id = {} updated", update.getId());
 
-        return directorMapper.mapDtoWithImageFromModel(save);
+        return directorMapper.mapDtoWithImageFromModel(update);
     }
 
     public void deleteById(Long id) {
@@ -97,7 +97,7 @@ public class DirectorService {
         Optional<DirectorModel> directorModel = directorRepository.findByName(dto.getName());
 
         if (directorModel.isPresent() && !directorModel.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the director with id = %s already exist", id));
+            throw new DuplicateException(String.format("the director with name = %s already exist", directorModel.get().getName()));
         }
     }
 }
