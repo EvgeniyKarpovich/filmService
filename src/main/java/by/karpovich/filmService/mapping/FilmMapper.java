@@ -113,20 +113,6 @@ public class FilmMapper {
         return dtoFilms;
     }
 
-    public List<FilmWithPosterDto> mapListDtoWithImageFromListModel(List<FilmModel> films) {
-        if (films == null) {
-            return null;
-        }
-
-        List<FilmWithPosterDto> listDto = new ArrayList<>();
-
-        for (FilmModel model : films) {
-            listDto.add(mapDtoWithImageFromModel(model));
-        }
-
-        return listDto;
-    }
-
     public FilmWithPosterDto mapDtoWithImageFromModel(FilmModel model) {
         if (model == null) {
             return null;
