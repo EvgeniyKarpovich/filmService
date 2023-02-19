@@ -1,5 +1,7 @@
 package by.karpovich.filmService.api.dto.directorDto;
 
+import by.karpovich.filmService.api.dto.filmDto.FilmDtoForFindAll;
+import by.karpovich.filmService.jpa.model.Career;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,16 +17,15 @@ import java.util.List;
 @NoArgsConstructor
 public class DirectorDtoWithAvatar {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long id;
-
     private String name;
 
     private byte[] avatar;
 
+    private List<Career> careers;
+
     private String dateOfBirth;
 
-    private Long placeOfBirth;
+    private String placeOfBirth;
 
-    private List<Long> filmsId = new ArrayList<>();
+    private List<FilmDtoForFindAll> films = new ArrayList<>();
 }

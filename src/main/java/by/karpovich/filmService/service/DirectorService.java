@@ -1,6 +1,7 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.directorDto.DirectorDto;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForFindAll;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoWithAvatar;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
@@ -42,10 +43,10 @@ public class DirectorService {
         return directorMapper.mapDtoWithImageFromModel(model);
     }
 
-    public DirectorDtoWithAvatar save(DirectorDto dto, MultipartFile file) {
+    public DirectorDtoWithAvatar save(DirectorDtoForSaveUpdate dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
-        DirectorModel model = directorMapper.mapModelFromDto(dto, file);
+        DirectorModel model = directorMapper.mapModelFromDirectorDtoForSaveUpdate(dto, file);
         DirectorModel save = directorRepository.save(model);
 
         log.info("method save - the director with name {} saved", save.getName());
@@ -58,7 +59,7 @@ public class DirectorService {
         Page<DirectorModel> directorModelPage = directorRepository.findAll(pageable);
         List<DirectorModel> content = directorModelPage.getContent();
 
-        List<DirectorDtoWithAvatar> directorDtoWithAvatars = directorMapper.mapListDtoWithAvatarFromListModel(content);
+        List<DirectorDtoForFindAll> directorDtoWithAvatars = directorMapper.mapListDirectorDtoForFindAllFromListModels(content);
 
         Map<String, Object> response = new HashMap<>();
 
@@ -72,10 +73,10 @@ public class DirectorService {
         return response;
     }
 
-    public DirectorDtoWithAvatar update(DirectorDto dto, Long id, MultipartFile file) {
+    public DirectorDtoWithAvatar update(DirectorDtoForSaveUpdate dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
-        DirectorModel model = directorMapper.mapModelFromDto(dto, file);
+        DirectorModel model = directorMapper.mapModelFromDirectorDtoForSaveUpdate(dto, file);
         model.setId(id);
         DirectorModel update = directorRepository.save(model);
 
@@ -93,7 +94,7 @@ public class DirectorService {
         log.info("method deleteById - the director with id = {} deleted", id);
     }
 
-    private void validateAlreadyExists(DirectorDto dto, Long id) {
+    private void validateAlreadyExists(DirectorDtoForSaveUpdate dto, Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findByName(dto.getName());
 
         if (directorModel.isPresent() && !directorModel.get().getId().equals(id)) {

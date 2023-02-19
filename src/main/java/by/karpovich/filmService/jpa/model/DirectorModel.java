@@ -1,5 +1,6 @@
 package by.karpovich.filmService.jpa.model;
 
+import by.karpovich.filmService.jpa.converters.CareerForModelConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,10 @@ public class DirectorModel {
 
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "careers")
+    @Convert(converter = CareerForModelConverter.class)
+    private List<Career> careers = new ArrayList<>();
 
     @Column(name = "date_of_birth")
     private Instant dateOfBirth;

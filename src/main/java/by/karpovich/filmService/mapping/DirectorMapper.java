@@ -1,6 +1,7 @@
 package by.karpovich.filmService.mapping;
 
-import by.karpovich.filmService.api.dto.directorDto.DirectorDto;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForFindAll;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoWithAvatar;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.DirectorModel;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class DirectorMapper {
@@ -28,28 +28,36 @@ public class DirectorMapper {
     private CountryService countryService;
     @Autowired
     private FilmRepository filmRepository;
+    @Autowired
+    private FilmMapper filmMapper;
 
-    public DirectorDto mapDtoFromModel(DirectorModel model, MultipartFile file) {
+    public DirectorDtoForFindAll mapDirectorDtoForFindAllFromModel(DirectorModel model) {
         if (model == null) {
             return null;
         }
 
-        String resulFileName = FileUploadDownloadUtil.generationFileName(file);
-        FileUploadDownloadUtil.saveFile(resulFileName, file);
+        DirectorDtoForFindAll dto = new DirectorDtoForFindAll();
 
-        DirectorDto dto = new DirectorDto();
-
-        dto.setId(model.getId());
         dto.setName(model.getName());
-        dto.setAvatar(resulFileName);
-        dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
-        dto.setFilmsId(findFilmsIdFromDirectorModel(model));
+        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
 
         return dto;
     }
 
-    public DirectorModel mapModelFromDto(DirectorDto dto, MultipartFile file) {
+    public List<DirectorDtoForFindAll> mapListDirectorDtoForFindAllFromListModels(List<DirectorModel> models) {
+        if (models == null) {
+            return null;
+        }
+
+        List<DirectorDtoForFindAll> directors = new ArrayList<>();
+
+        for (DirectorModel model : models) {
+            directors.add(mapDirectorDtoForFindAllFromModel(model));
+        }
+        return directors;
+    }
+
+    public DirectorModel mapModelFromDirectorDtoForSaveUpdate(DirectorDtoForSaveUpdate dto, MultipartFile file) {
         if (dto == null) {
             return null;
         }
@@ -60,26 +68,13 @@ public class DirectorMapper {
         FileUploadDownloadUtil.saveFile(resulFileName, file);
 
         model.setName(dto.getName());
+        model.setCareers(dto.getCareers());
         model.setAvatar(resulFileName);
         model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
         model.setFilms(findFilmsByDirectorId(dto.getFilmsId()));
 
         return model;
-    }
-
-    public List<DirectorDtoWithAvatar> mapListDtoWithAvatarFromListModel(List<DirectorModel> modelList) {
-        if (modelList == null) {
-            return null;
-        }
-
-        List<DirectorDtoWithAvatar> directorDtoList = new ArrayList<>();
-
-        for (DirectorModel directorModel : modelList) {
-            directorDtoList.add(mapDtoWithImageFromModel(directorModel));
-        }
-
-        return directorDtoList;
     }
 
     public DirectorDtoWithAvatar mapDtoWithImageFromModel(DirectorModel model) {
@@ -89,34 +84,17 @@ public class DirectorMapper {
 
         DirectorDtoWithAvatar dto = new DirectorDtoWithAvatar();
 
-        dto.setId(model.getId());
         dto.setName(model.getName());
+        dto.setCareers(model.getCareers());
         dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
-        dto.setFilmsId(findFilmsIdFromDirectorModel(model));
+        dto.setPlaceOfBirth(model.getPlaceOfBirth().getName());
+        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByDirectorsId(model.getId())));
 
         return dto;
     }
 
-    public List<DirectorModel> findDirectorModelsByDirectorId(List<Long> listDirectorsId) {
-        List<DirectorModel> directorModels = new ArrayList<>();
-
-        for (Long id : listDirectorsId) {
-            DirectorModel directorModel = findDirectorByIdWhichWillReturnModel(id);
-            directorModels.add(directorModel);
-        }
-
-        return directorModels;
-    }
-
-    public List<Long> findFilmsIdFromDirectorModel(DirectorModel directorModel) {
-        return directorModel.getFilms().stream()
-                .map(FilmModel::getId)
-                .collect(Collectors.toList());
-    }
-
-    public List<FilmModel> findFilmsByDirectorId(List<Long> listFilmId) {
+    private List<FilmModel> findFilmsByDirectorId(List<Long> listFilmId) {
         List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
@@ -127,14 +105,14 @@ public class DirectorMapper {
         return modelList;
     }
 
-    public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
+    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
         Optional<FilmModel> filmModel = filmRepository.findById(id);
 
         return filmModel.orElseThrow(
                 () -> new NotFoundModelException("the film with id = " + filmModel.get().getId() + " not found"));
     }
 
-    public DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
+    private DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
 
         return directorModel.orElseThrow(

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @Converter
-public class CareerForActorConverter implements AttributeConverter<List<Career>, String> {
+public class CareerForModelConverter implements AttributeConverter<List<Career>, String> {
 
     private static final String SEPARATOR = ",";
 

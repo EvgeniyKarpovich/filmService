@@ -10,6 +10,7 @@ import by.karpovich.filmService.jpa.model.DirectorModel;
 import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.model.GenreModel;
 import by.karpovich.filmService.jpa.repository.ActorRepository;
+import by.karpovich.filmService.jpa.repository.DirectorRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.Utils;
@@ -28,9 +29,9 @@ public class FilmMapper {
     @Autowired
     private CountryService countryService;
     @Autowired
-    private GenreMapper genreMapper;
+    private DirectorRepository directorRepository;
     @Autowired
-    private DirectorMapper directorMapper;
+    private GenreMapper genreMapper;
     @Autowired
     private ActorRepository actorRepository;
 
@@ -50,7 +51,7 @@ public class FilmMapper {
         model.setTagline(dto.getTagline());
         model.setReleaseDate(Utils.mapInstantFromString(dto.getReleaseDate()));
         model.setCountry(countryService.findCountryByIdWhichWillReturnModel(dto.getCountryId()));
-        model.setDirectors(directorMapper.findDirectorModelsByDirectorId(dto.getDirectorsId()));
+        model.setDirectors(findDirectorModelsByDirectorId(dto.getDirectorsId()));
         model.setGenres(genreMapper.findGenreModelsByGenreId(dto.getGenresId()));
         model.setAgeLimit(dto.getAgeLimit());
         model.setDurationInMinutes(dto.getDurationInMinutes());
@@ -97,6 +98,17 @@ public class FilmMapper {
         dto.setGenre(findFirstGenreNameFromFilmModel(model));
 
         return dto;
+    }
+
+    public List<DirectorModel> findDirectorModelsByDirectorId(List<Long> listDirectorsId) {
+        List<DirectorModel> directorModels = new ArrayList<>();
+
+        for (Long id : listDirectorsId) {
+            DirectorModel directorModel = findDirectorByIdWhichWillReturnModel(id);
+            directorModels.add(directorModel);
+        }
+
+        return directorModels;
     }
 
     public List<FilmDtoForFindAll> mapListFilmDtoForFindAllFromFilmModels(List<FilmModel> films) {
@@ -189,6 +201,13 @@ public class FilmMapper {
         }
 
         return actorModels;
+    }
+
+    private DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
+        Optional<DirectorModel> directorModel = directorRepository.findById(id);
+
+        return directorModel.orElseThrow(
+                () -> new NotFoundModelException("the director with id = " + directorModel.get().getId() + " not found"));
     }
 
     private ActorModel findActorByIdWhichWillReturnModel(Long id) {

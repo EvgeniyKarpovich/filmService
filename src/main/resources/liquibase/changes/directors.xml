@@ -27,4 +27,11 @@
         </sql>
     </changeSet>
 
+    <changeSet id="actors-4" author="karpovich.e">
+        <sql>
+            ALTER TABLE DIRECTORS
+            ADD careers varchar(200) NOT NULL;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

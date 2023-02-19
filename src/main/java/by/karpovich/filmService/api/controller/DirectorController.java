@@ -1,6 +1,6 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.directorDto.DirectorDto;
+import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoWithAvatar;
 import by.karpovich.filmService.service.DirectorService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +27,7 @@ public class DirectorController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public DirectorDtoWithAvatar save(@Valid @RequestPart(value = "dto")
-                                      @Parameter(schema = @Schema(type = "string", format = "binary")) DirectorDto dto,
+                                      @Parameter(schema = @Schema(type = "string", format = "binary")) DirectorDtoForSaveUpdate dto,
                                       @RequestPart("file") MultipartFile file) {
         return directorService.save(dto, file);
     }
@@ -40,7 +40,7 @@ public class DirectorController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public DirectorDtoWithAvatar update(@Valid @RequestPart(value = "dto")
-                                        @Parameter(schema = @Schema(type = "string", format = "binary")) DirectorDto dto,
+                                        @Parameter(schema = @Schema(type = "string", format = "binary")) DirectorDtoForSaveUpdate dto,
                                         @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         return directorService.update(dto, id, file);
     }

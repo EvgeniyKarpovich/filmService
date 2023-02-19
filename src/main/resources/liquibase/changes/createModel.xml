@@ -36,10 +36,10 @@
 
     <changeSet id="model-directors-1" author="karpovich.e">
         <sql>
-            INSERT INTO DIRECTORS (name, date_of_birth, country_id)
-            VALUES ('Steven Spielberg', '1958-08-08T18:34:51.464+00:00', '2'),
-            ('Martin Scorsese', '1971-04-10T18:34:51.464+00:00', '3'),
-            ('Quentin Tarantino', '1966-05-11T18:34:51.464+00:00', '1')
+            INSERT INTO DIRECTORS (name, careers, date_of_birth, country_id)
+            VALUES ('Steven Spielberg', 'DIRECTOR', '1958-08-08T18:34:51.464+00:00', '2'),
+            ('Martin Scorsese', 'DIRECTOR', '1971-04-10T18:34:51.464+00:00', '3'),
+            ('Quentin Tarantino', 'DIRECTOR', '1966-05-11T18:34:51.464+00:00', '1')
         </sql>
     </changeSet>
 

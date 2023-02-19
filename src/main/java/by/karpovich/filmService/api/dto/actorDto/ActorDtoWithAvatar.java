@@ -1,7 +1,7 @@
 package by.karpovich.filmService.api.dto.actorDto;
 
+import by.karpovich.filmService.api.dto.filmDto.FilmDtoForFindAll;
 import by.karpovich.filmService.jpa.model.Career;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ActorDtoWithAvatar {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     private String name;
@@ -31,5 +30,5 @@ public class ActorDtoWithAvatar {
 
     private Integer height;
 
-    private List<Long> filmsId = new ArrayList<>();
+    private List<FilmDtoForFindAll> films = new ArrayList<>();
 }

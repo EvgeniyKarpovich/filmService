@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class ActorMapper {
@@ -110,15 +109,9 @@ public class ActorMapper {
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
         dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
         dto.setHeight(model.getHeight());
-        dto.setFilmsId(findFilmsIdFromActorModel(model));
+        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByActorsId(model.getId())));
 
         return dto;
-    }
-
-    private List<Long> findFilmsIdFromActorModel(ActorModel actorModel) {
-        return actorModel.getFilms().stream()
-                .map(FilmModel::getId)
-                .collect(Collectors.toList());
     }
 
     private List<FilmModel> findFilmModelsByActorsId(List<Long> listFilmId) {
