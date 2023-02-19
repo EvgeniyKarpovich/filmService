@@ -28,4 +28,11 @@
         </sql>
     </changeSet>
 
+    <changeSet id="actors-3" author="karpovich.e">
+        <sql>
+            ALTER TABLE ACTORS
+            ADD careers varchar(200) NOT NULL;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

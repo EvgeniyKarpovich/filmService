@@ -25,22 +25,12 @@
         </sql>
     </changeSet>
 
-    <changeSet id="model_career-1" author="karpovich.e">
-        <sql>
-            INSERT INTO CAREERS (name)
-            VALUES
-            ('Actor'),
-            ('Producer'),
-            ('Director');
-        </sql>
-    </changeSet>
-
     <changeSet id="model-actors-1" author="karpovich.e">
         <sql>
-            INSERT INTO ACTORS (name, date_of_birth, country_id, height)
-            VALUES ('Leonardo DiCaprio', '1974-11-11T18:34:51.464+00:00', '2', '184' ),
-            ('Brad Pit', '1965-09-12T18:34:51.464+00:00', '1', '178'),
-            ('Tom Cruise', '1963-04-09T18:34:51.464+00:00', '3', '168')
+            INSERT INTO ACTORS (name, careers, date_of_birth, country_id, height)
+            VALUES ('Leonardo DiCaprio', 'ACTOR,PRODUCER', '1974-11-11T18:34:51.464+00:00', '2', '184' ),
+            ('Brad Pit', 'ACTOR,SCENARIST', '1965-09-12T18:34:51.464+00:00', '1', '178'),
+            ('Tom Cruise', 'ACTOR,SCENARIST', '1963-04-09T18:34:51.464+00:00', '3', '168')
         </sql>
     </changeSet>
 

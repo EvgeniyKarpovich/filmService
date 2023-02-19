@@ -1,6 +1,8 @@
 package by.karpovich.filmService.mapping;
 
-import by.karpovich.filmService.api.dto.actorDto.ActorDto;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoForFindAll;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoForSaveUpdate;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoOut;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
@@ -25,29 +27,55 @@ public class ActorMapper {
     private CountryService countryService;
     @Autowired
     private FilmRepository filmRepository;
+    @Autowired
+    private FilmMapper filmMapper;
 
-    public ActorDto mapDtoFromModel(ActorModel model, MultipartFile file) {
+    public ActorDtoOut mapActorOutDtoFromActorModel(ActorModel model) {
         if (model == null) {
             return null;
         }
 
-        String resulFileName = FileUploadDownloadUtil.generationFileName(file);
-        FileUploadDownloadUtil.saveFile(resulFileName, file);
+        ActorDtoOut dto = new ActorDtoOut();
 
-        ActorDto dto = new ActorDto();
-
-        dto.setId(model.getId());
         dto.setName(model.getName());
-        dto.setAvatar(resulFileName);
+        dto.setProfessions(model.getCareers());
+        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
+        dto.setPlaceOfBirth(model.getPlaceOfBirth().getName());
         dto.setHeight(model.getHeight());
-        dto.setFilmsId(findFilmsIdFromActorModel(model));
+        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByActorsId(model.getId())));
 
         return dto;
     }
 
-    public ActorModel mapModelFromDto(ActorDto dto, MultipartFile file) {
+    public ActorDtoForFindAll mapActorDtoForFindAllFromActorModel(ActorModel model) {
+        if (model == null) {
+            return null;
+        }
+
+        ActorDtoForFindAll dto = new ActorDtoForFindAll();
+
+        dto.setName(model.getName());
+        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
+
+        return dto;
+    }
+
+    public List<ActorDtoForFindAll> mapListDtoForFindAllFromListActors(List<ActorModel> models) {
+        if (models == null) {
+            return null;
+        }
+
+        List<ActorDtoForFindAll> actorsDto = new ArrayList<>();
+
+        for (ActorModel model : models) {
+            actorsDto.add(mapActorDtoForFindAllFromActorModel(model));
+        }
+
+        return actorsDto;
+    }
+
+    public ActorModel mapModelFromDto(ActorDtoForSaveUpdate dto, MultipartFile file) {
         if (dto == null) {
             return null;
         }
@@ -58,6 +86,7 @@ public class ActorMapper {
         FileUploadDownloadUtil.saveFile(resulFileName, file);
 
         model.setName(dto.getName());
+        model.setCareers(dto.getCareers());
         model.setAvatar(resulFileName);
         model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
@@ -65,20 +94,6 @@ public class ActorMapper {
         model.setFilms(findFilmModelsByActorsId(dto.getFilmsId()));
 
         return model;
-    }
-
-    public List<ActorDtoWithAvatar> mapListDtoWithAvatarFromListModel(List<ActorModel> modelList) {
-        if (modelList == null) {
-            return null;
-        }
-
-        List<ActorDtoWithAvatar> actorDtoList = new ArrayList<>();
-
-        for (ActorModel model : modelList) {
-            actorDtoList.add(mapDtoWithImageFromModel(model));
-        }
-
-        return actorDtoList;
     }
 
     public ActorDtoWithAvatar mapDtoWithImageFromModel(ActorModel model) {
@@ -90,6 +105,7 @@ public class ActorMapper {
 
         dto.setId(model.getId());
         dto.setName(model.getName());
+        dto.setCareers(model.getCareers());
         dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
         dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
@@ -99,13 +115,13 @@ public class ActorMapper {
         return dto;
     }
 
-    public List<Long> findFilmsIdFromActorModel(ActorModel actorModel) {
+    private List<Long> findFilmsIdFromActorModel(ActorModel actorModel) {
         return actorModel.getFilms().stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
     }
 
-    public List<FilmModel> findFilmModelsByActorsId(List<Long> listFilmId) {
+    private List<FilmModel> findFilmModelsByActorsId(List<Long> listFilmId) {
         List<FilmModel> modelList = new ArrayList<>();
 
         for (Long id : listFilmId) {
@@ -116,7 +132,7 @@ public class ActorMapper {
         return modelList;
     }
 
-    public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
+    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
         Optional<FilmModel> filmModel = filmRepository.findById(id);
 
         return filmModel.orElseThrow(

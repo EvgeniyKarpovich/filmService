@@ -1,5 +1,6 @@
 package by.karpovich.filmService.jpa.model;
 
+import by.karpovich.filmService.jpa.converters.CareerForActorConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +39,10 @@ public class ActorModel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", nullable = false)
     private CountryModel placeOfBirth;
+
+    @Column(name = "careers")
+    @Convert(converter = CareerForActorConverter.class)
+    private List<Career> careers = new ArrayList<>();
 
     @Column(name = "height")
     private Integer height;

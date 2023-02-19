@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,14 +24,11 @@ public interface FilmRepository extends JpaRepository<FilmModel, Long>,
 
     Page<FilmModel> findByActorsId(Long actorId, Pageable pageable);
 
+    List<FilmModel> findByActorsId(Long actorId);
+
     Page<FilmModel> findByCountryId(Long countryId, Pageable pageable);
 
     Page<FilmModel> findByDirectorsId(Long countryId, Pageable pageable);
 
     Page<FilmModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
-
-    //    @Query(value = "SELECT f FROM Films f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', ?1,'%')) ORDER BY f.rating_IMDB ASC", nativeQuery = true)
-//    List<FilmModel> getByNameLikeCaseInsensitive(String name);
-
-
 }

@@ -1,6 +1,8 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.actorDto.ActorDto;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoForFindAll;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoForSaveUpdate;
+import by.karpovich.filmService.api.dto.actorDto.ActorDtoOut;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
@@ -32,7 +34,7 @@ public class ActorService {
     @Autowired
     private ActorMapper actorMapper;
 
-    public ActorDtoWithAvatar findById(Long id) {
+    public ActorDtoOut findById(Long id) {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         ActorModel actorModel = model.orElseThrow(
@@ -40,10 +42,10 @@ public class ActorService {
 
         log.info("method findById - the actor found with id = {} ", actorModel.getId());
 
-        return actorMapper.mapDtoWithImageFromModel(actorModel);
+        return actorMapper.mapActorOutDtoFromActorModel(actorModel);
     }
 
-    public ActorDtoWithAvatar save(ActorDto dto, MultipartFile file) {
+    public ActorDtoWithAvatar save(ActorDtoForSaveUpdate dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
         ActorModel model = actorMapper.mapModelFromDto(dto, file);
@@ -59,7 +61,7 @@ public class ActorService {
         Page<ActorModel> actorModelPage = actorRepository.findAll(pageable);
         List<ActorModel> content = actorModelPage.getContent();
 
-        List<ActorDtoWithAvatar> actorDtoList = actorMapper.mapListDtoWithAvatarFromListModel(content);
+        List<ActorDtoForFindAll> actorDtoList = actorMapper.mapListDtoForFindAllFromListActors(content);
 
         Map<String, Object> response = new HashMap<>();
 
@@ -73,7 +75,7 @@ public class ActorService {
         return response;
     }
 
-    public ActorDtoWithAvatar update(ActorDto dto, Long id, MultipartFile file) {
+    public ActorDtoWithAvatar update(ActorDtoForSaveUpdate dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
         ActorModel model = actorMapper.mapModelFromDto(dto, file);
@@ -100,10 +102,10 @@ public class ActorService {
         Page<ActorModel> actorModelPage = actorRepository.findByNameContainingIgnoreCase(name, pageable);
         List<ActorModel> content = actorModelPage.getContent();
 
-        List<ActorDtoWithAvatar> actorDtoWithAvatars = actorMapper.mapListDtoWithAvatarFromListModel(content);
+        List<ActorDtoForFindAll> actorDtoWithAvatars = actorMapper.mapListDtoForFindAllFromListActors(content);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("Films", actorDtoWithAvatars);
+        response.put("Actors", actorDtoWithAvatars);
         response.put("currentPage", actorModelPage.getNumber());
         response.put("totalItems", actorModelPage.getTotalElements());
         response.put("totalPages", actorModelPage.getTotalPages());
@@ -113,7 +115,7 @@ public class ActorService {
         return response;
     }
 
-    private void validateAlreadyExists(ActorDto dto, Long id) {
+    private void validateAlreadyExists(ActorDtoForSaveUpdate dto, Long id) {
         Optional<ActorModel> model = actorRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
