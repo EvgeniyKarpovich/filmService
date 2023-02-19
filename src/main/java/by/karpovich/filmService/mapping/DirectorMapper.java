@@ -43,8 +43,8 @@ public class DirectorMapper {
         dto.setName(model.getName());
         dto.setAvatar(resulFileName);
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(findCountryIdFromDirectorModel(model));
-        dto.setFilmsId(findFilmsIdFromDirectorModel(model.getId()));
+        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
+        dto.setFilmsId(findFilmsIdFromDirectorModel(model));
 
         return dto;
     }
@@ -93,8 +93,8 @@ public class DirectorMapper {
         dto.setName(model.getName());
         dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(findCountryIdFromDirectorModel(model));
-        dto.setFilmsId(findFilmsIdFromDirectorModel(model.getId()));
+        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
+        dto.setFilmsId(findFilmsIdFromDirectorModel(model));
 
         return dto;
     }
@@ -110,12 +110,8 @@ public class DirectorMapper {
         return directorModels;
     }
 
-    public List<Long> findFilmsIdFromDirectorModel(Long id) {
-        DirectorModel model = findDirectorByIdWhichWillReturnModel(id);
-
-        List<FilmModel> listFilm = model.getFilms();
-
-        return listFilm.stream()
+    public List<Long> findFilmsIdFromDirectorModel(DirectorModel directorModel) {
+        return directorModel.getFilms().stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
     }
@@ -129,12 +125,6 @@ public class DirectorMapper {
         }
 
         return modelList;
-    }
-
-    public Long findCountryIdFromDirectorModel(DirectorModel model) {
-        DirectorModel directorModel = findDirectorByIdWhichWillReturnModel(model.getId());
-
-        return directorModel.getPlaceOfBirth().getId();
     }
 
     public FilmModel findFilmByIdWhichWillReturnModel(Long id) {

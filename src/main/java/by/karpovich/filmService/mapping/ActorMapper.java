@@ -5,7 +5,6 @@ import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
 import by.karpovich.filmService.jpa.model.FilmModel;
-import by.karpovich.filmService.jpa.repository.ActorRepository;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
@@ -22,8 +21,6 @@ import java.util.stream.Collectors;
 @Component
 public class ActorMapper {
 
-    @Autowired
-    private ActorRepository actorRepository;
     @Autowired
     private CountryService countryService;
     @Autowired
@@ -43,9 +40,9 @@ public class ActorMapper {
         dto.setName(model.getName());
         dto.setAvatar(resulFileName);
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(findCountryIdFromActorModel(model));
+        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
         dto.setHeight(model.getHeight());
-        dto.setFilmsId(findFilmsIdFromActorModel(model.getId()));
+        dto.setFilmsId(findFilmsIdFromActorModel(model));
 
         return dto;
     }
@@ -95,19 +92,15 @@ public class ActorMapper {
         dto.setName(model.getName());
         dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
         dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(findCountryIdFromActorModel(model));
+        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
         dto.setHeight(model.getHeight());
-        dto.setFilmsId(findFilmsIdFromActorModel(model.getId()));
+        dto.setFilmsId(findFilmsIdFromActorModel(model));
 
         return dto;
     }
 
-    public List<Long> findFilmsIdFromActorModel(Long id) {
-        ActorModel model = findActorByIdWhichWillReturnModel(id);
-
-        List<FilmModel> films = model.getFilms();
-
-        return films.stream()
+    public List<Long> findFilmsIdFromActorModel(ActorModel actorModel) {
+        return actorModel.getFilms().stream()
                 .map(FilmModel::getId)
                 .collect(Collectors.toList());
     }
@@ -123,23 +116,10 @@ public class ActorMapper {
         return modelList;
     }
 
-    public Long findCountryIdFromActorModel(ActorModel model) {
-        ActorModel actorModel = findActorByIdWhichWillReturnModel(model.getId());
-
-        return actorModel.getPlaceOfBirth().getId();
-    }
-
     public FilmModel findFilmByIdWhichWillReturnModel(Long id) {
         Optional<FilmModel> optionalCountry = filmRepository.findById(id);
 
         return optionalCountry.orElseThrow(
                 () -> new NotFoundModelException("the film with ID = " + id + " not found"));
-    }
-
-    public ActorModel findActorByIdWhichWillReturnModel(Long id) {
-        Optional<ActorModel> model = actorRepository.findById(id);
-
-        return model.orElseThrow(
-                () -> new NotFoundModelException("the actor with ID = " + id + " not found"));
     }
 }
