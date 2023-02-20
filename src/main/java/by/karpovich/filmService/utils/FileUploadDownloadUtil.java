@@ -14,12 +14,10 @@ import java.util.UUID;
 
 public class FileUploadDownloadUtil {
 
-    private static final String UPLOAD_PATH = "D://image//poster";
-
     public static void saveFile(String fileName,
                                 MultipartFile file) {
 
-        Path uploadPath = Paths.get(UPLOAD_PATH);
+        Path uploadPath = Paths.get(Constant.UPLOAD_PATH);
 
         if (!Files.exists(uploadPath)) {
             try {
@@ -43,7 +41,7 @@ public class FileUploadDownloadUtil {
     }
 
     public static byte[] getImageAsResponseEntity(String fileName) {
-        String dirPath = UPLOAD_PATH + "//";
+        String dirPath = Constant.UPLOAD_PATH + "//";
         InputStream in = null;
         byte[] media = new byte[0];
         try {
