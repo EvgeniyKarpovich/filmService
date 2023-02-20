@@ -1,6 +1,7 @@
 package by.karpovich.filmService.service;
 
-import by.karpovich.filmService.api.dto.genreDto.GenreDto;
+import by.karpovich.filmService.api.dto.genreDto.GenreDtoForSaveUpdate;
+import by.karpovich.filmService.api.dto.genreDto.GenreOutDto;
 import by.karpovich.filmService.exception.DuplicateException;
 import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.GenreModel;
@@ -24,7 +25,7 @@ public class GenresService {
     @Autowired
     private GenreMapper genreMapper;
 
-    public GenreDto findById(Long id) {
+    public GenreOutDto findById(Long id) {
         Optional<GenreModel> model = genreRepository.findById(id);
         GenreModel genresModel = model.orElseThrow(
                 () -> new NotFoundModelException(String.format("the genre with id = %s not found", model.get().getId())));
@@ -34,7 +35,7 @@ public class GenresService {
         return genreMapper.mapDtoFromModel(genresModel);
     }
 
-    public GenreDto save(GenreDto dto) {
+    public GenreOutDto save(GenreDtoForSaveUpdate dto) {
         validateAlreadyExists(dto, null);
 
         GenreModel model = genreMapper.mapModelFromDto(dto);
@@ -45,7 +46,7 @@ public class GenresService {
         return genreMapper.mapDtoFromModel(savedModel);
     }
 
-    public List<GenreDto> findAll() {
+    public List<GenreOutDto> findAll() {
         List<GenreModel> genres = genreRepository.findAll();
 
         log.info("method findAll - the genres found {} ", genres.size());
@@ -53,7 +54,7 @@ public class GenresService {
         return genreMapper.mapListDtoFromListModel(genres);
     }
 
-    public GenreDto update(GenreDto dto, Long id) {
+    public GenreOutDto update(GenreDtoForSaveUpdate dto, Long id) {
         validateAlreadyExists(dto, id);
 
         GenreModel model = genreMapper.mapModelFromDto(dto);
@@ -74,7 +75,7 @@ public class GenresService {
         log.info("method deleteById - the genre with id = {} deleted", id);
     }
 
-    private void validateAlreadyExists(GenreDto dto, Long id) {
+    private void validateAlreadyExists(GenreDtoForSaveUpdate dto, Long id) {
         Optional<GenreModel> genreModel = genreRepository.findByName(dto.getName());
 
         if (genreModel.isPresent() && !genreModel.get().getId().equals(id)) {

@@ -43,8 +43,4 @@ public class DirectorDtoForSaveUpdate {
     @ValidCountry
     @NotNull(message = "Enter country id")
     private Long placeOfBirth;
-
-    @Schema(example = "1, 3")
-    @NotNull(message = "Enter film id")
-    private List<@ValidFilm Long> filmsId = new ArrayList<>();
 }

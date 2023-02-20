@@ -11,6 +11,7 @@ import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.model.GenreModel;
 import by.karpovich.filmService.jpa.repository.ActorRepository;
 import by.karpovich.filmService.jpa.repository.DirectorRepository;
+import by.karpovich.filmService.jpa.repository.GenreRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.Utils;
@@ -31,9 +32,9 @@ public class FilmMapper {
     @Autowired
     private DirectorRepository directorRepository;
     @Autowired
-    private GenreMapper genreMapper;
-    @Autowired
     private ActorRepository actorRepository;
+    @Autowired
+    private GenreRepository genreRepository;
 
     public FilmModel mapModelFromDto(FilmDtoForSaveUpdate dto, MultipartFile file) {
         if (dto == null) {
@@ -52,7 +53,7 @@ public class FilmMapper {
         model.setReleaseDate(Utils.mapInstantFromString(dto.getReleaseDate()));
         model.setCountry(countryService.findCountryByIdWhichWillReturnModel(dto.getCountryId()));
         model.setDirectors(findDirectorModelsByDirectorId(dto.getDirectorsId()));
-        model.setGenres(genreMapper.findGenreModelsByGenreId(dto.getGenresId()));
+        model.setGenres(findGenreModelsByGenreId(dto.getGenresId()));
         model.setAgeLimit(dto.getAgeLimit());
         model.setDurationInMinutes(dto.getDurationInMinutes());
         model.setActors(findActorModelsByActorId(dto.getActorsId()));
@@ -201,6 +202,24 @@ public class FilmMapper {
         }
 
         return actorModels;
+    }
+
+    private List<GenreModel> findGenreModelsByGenreId(List<Long> listGenresId) {
+        List<GenreModel> genreModels = new ArrayList<>();
+
+        for (Long id : listGenresId) {
+            GenreModel model = findGenreByIdWhichWillReturnModel(id);
+            genreModels.add(model);
+        }
+
+        return genreModels;
+    }
+
+    private GenreModel findGenreByIdWhichWillReturnModel(Long id) {
+        Optional<GenreModel> genreModel = genreRepository.findById(id);
+
+        return genreModel.orElseThrow(
+                () -> new NotFoundModelException("the genre with id = " + genreModel.get().getId() + " not found"));
     }
 
     private DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {

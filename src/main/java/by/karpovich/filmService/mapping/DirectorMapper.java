@@ -3,10 +3,7 @@ package by.karpovich.filmService.mapping;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForFindAll;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoWithAvatar;
-import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.DirectorModel;
-import by.karpovich.filmService.jpa.model.FilmModel;
-import by.karpovich.filmService.jpa.repository.DirectorRepository;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
@@ -17,13 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class DirectorMapper {
 
-    @Autowired
-    private DirectorRepository directorRepository;
     @Autowired
     private CountryService countryService;
     @Autowired
@@ -72,7 +66,6 @@ public class DirectorMapper {
         model.setAvatar(resulFileName);
         model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
-        model.setFilms(findFilmsByDirectorId(dto.getFilmsId()));
 
         return model;
     }
@@ -92,30 +85,5 @@ public class DirectorMapper {
         dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByDirectorsId(model.getId())));
 
         return dto;
-    }
-
-    private List<FilmModel> findFilmsByDirectorId(List<Long> listFilmId) {
-        List<FilmModel> modelList = new ArrayList<>();
-
-        for (Long id : listFilmId) {
-            FilmModel model = findFilmByIdWhichWillReturnModel(id);
-            modelList.add(model);
-        }
-
-        return modelList;
-    }
-
-    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> filmModel = filmRepository.findById(id);
-
-        return filmModel.orElseThrow(
-                () -> new NotFoundModelException("the film with id = " + filmModel.get().getId() + " not found"));
-    }
-
-    private DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
-        Optional<DirectorModel> directorModel = directorRepository.findById(id);
-
-        return directorModel.orElseThrow(
-                () -> new NotFoundModelException("the director with id = " + directorModel.get().getId() + " not found"));
     }
 }

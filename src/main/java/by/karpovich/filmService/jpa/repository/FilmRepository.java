@@ -28,6 +28,8 @@ public interface FilmRepository extends JpaRepository<FilmModel, Long>,
 
     List<FilmModel> findByDirectorsId(Long id);
 
+    List<FilmModel> findByGenresId(Long id);
+
     Page<FilmModel> findByCountryId(Long countryId, Pageable pageable);
 
     Page<FilmModel> findByDirectorsId(Long countryId, Pageable pageable);

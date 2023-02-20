@@ -1,6 +1,7 @@
 package by.karpovich.filmService.api.controller;
 
-import by.karpovich.filmService.api.dto.genreDto.GenreDto;
+import by.karpovich.filmService.api.dto.genreDto.GenreDtoForSaveUpdate;
+import by.karpovich.filmService.api.dto.genreDto.GenreOutDto;
 import by.karpovich.filmService.service.GenresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,23 +16,23 @@ public class GenreController {
     private GenresService genresService;
 
     @GetMapping("/{id}")
-    public GenreDto findById(@PathVariable("id") Long id) {
+    public GenreOutDto findById(@PathVariable("id") Long id) {
         return genresService.findById(id);
     }
 
     @PostMapping
-    public GenreDto save(@RequestBody GenreDto dto) {
+    public GenreOutDto save(@RequestBody GenreDtoForSaveUpdate dto) {
         return genresService.save(dto);
     }
 
     @GetMapping
-    public List<GenreDto> findAll() {
+    public List<GenreOutDto> findAll() {
         return genresService.findAll();
     }
 
     @PutMapping("/{id}")
-    public GenreDto update(@RequestBody GenreDto dto,
-                           @PathVariable("id") Long id) {
+    public GenreOutDto update(@RequestBody GenreDtoForSaveUpdate dto,
+                              @PathVariable("id") Long id) {
         return genresService.update(dto, id);
     }
 

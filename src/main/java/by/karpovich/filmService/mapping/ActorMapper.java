@@ -4,9 +4,7 @@ import by.karpovich.filmService.api.dto.actorDto.ActorDtoForFindAll;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoOut;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
-import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
-import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
@@ -17,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class ActorMapper {
@@ -90,7 +87,6 @@ public class ActorMapper {
         model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
         model.setPlaceOfBirth(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
         model.setHeight(dto.getHeight());
-        model.setFilms(findFilmModelsByActorsId(dto.getFilmsId()));
 
         return model;
     }
@@ -112,23 +108,5 @@ public class ActorMapper {
         dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByActorsId(model.getId())));
 
         return dto;
-    }
-
-    private List<FilmModel> findFilmModelsByActorsId(List<Long> listFilmId) {
-        List<FilmModel> modelList = new ArrayList<>();
-
-        for (Long id : listFilmId) {
-            FilmModel filmById = findFilmByIdWhichWillReturnModel(id);
-            modelList.add(filmById);
-        }
-
-        return modelList;
-    }
-
-    private FilmModel findFilmByIdWhichWillReturnModel(Long id) {
-        Optional<FilmModel> filmModel = filmRepository.findById(id);
-
-        return filmModel.orElseThrow(
-                () -> new NotFoundModelException("the film with id = " + filmModel.get().getId() + " not found"));
     }
 }
