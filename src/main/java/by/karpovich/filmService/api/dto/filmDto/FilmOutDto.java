@@ -17,7 +17,7 @@ public class FilmOutDto {
 
     private byte[] poster;
 
-    private Double ratingIMDB;
+    private String ratingIMDB;
 
     private String tagline;
 

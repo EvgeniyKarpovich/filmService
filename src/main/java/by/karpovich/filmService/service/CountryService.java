@@ -6,6 +6,7 @@ import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.CountryModel;
 import by.karpovich.filmService.jpa.repository.CountryRepository;
 import by.karpovich.filmService.mapping.CountryMapper;
+import by.karpovich.filmService.utils.IMDB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,6 @@ public class CountryService {
                 () -> new NotFoundModelException(String.format("the country with id = %s not found", model.get().getId())));
 
         log.info("method findById - the country found with id = {} ", country.getId());
-
         return countryMapper.mapDtoFromModel(country);
     }
 

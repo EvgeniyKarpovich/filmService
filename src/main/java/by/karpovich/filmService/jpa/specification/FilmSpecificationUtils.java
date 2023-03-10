@@ -17,7 +17,7 @@ public class FilmSpecificationUtils {
         };
     }
 
-    public static Specification<FilmModel> findByRating(Double rating) {
+    public static Specification<FilmModel> findByRating(String rating) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("ratingIMDB"), rating);
 
     }

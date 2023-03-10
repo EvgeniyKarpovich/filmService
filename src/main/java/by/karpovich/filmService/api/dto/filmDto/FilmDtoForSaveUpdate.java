@@ -28,11 +28,15 @@ public class FilmDtoForSaveUpdate {
     @NotBlank(message = "Enter name")
     private String name;
 
+    @Schema(example = "tt1276104")
+    @NotBlank(message = "Enter nameFilmFromImdb")
+    private String nameFilmFromImdb;
+
     private String poster;
 
     @Schema(example = "8.2")
-    @NotNull(message = "Enter rating")
-    private Double ratingIMDB;
+    @NotBlank(message = "Enter rating")
+    private String ratingIMDB;
 
     @Schema(example = "Never give up")
     @NotBlank(message = "Enter tagline")

@@ -47,14 +47,14 @@
         <sql>
             INSERT INTO Films (name, poster, rating_IMDB, tag_line, release_date, country_id, age_Limit,
             duration_in_minutes,
-            description)
-            VALUES ('Petlya vremeni', '', '7.7', 'Davai taschi', '1999-04-10T18:34:51.464+00:00', '1','18+', '154',
-            'Dobrui black Jack'),
-            ('Pobeg iz shoushenka', '', '8.0', 'Vsegda mogno sbegat iz turmu', '2008-04-10T18:34:51.464+00:00', '3',
+            description, name_movie_imdb)
+            VALUES ('Looper', '', '7.7', 'Davai taschi', '1999-04-10T18:34:51.464+00:00', '1','18+', '154',
+            'Dobrui black Jack', 'tt1276104'),
+            ('The Shawshank Redemption', '', '8.0', 'Vsegda mogno sbegat iz turmu', '2008-04-10T18:34:51.464+00:00', '3',
             '16+',
-            '184', 'Cep calm'),
-            ('Batman', '', '8.5', 'Letuchaya mush pobegdaet dage lva', '2016-04-10T18:34:51.464+00:00', 2, '21+', '142',
-            'Dobro pobegdaet zlo')
+            '184', 'Cep calm', 'tt0111161'),
+            ('The Dark Knight', '', '8.5', 'Letuchaya mush pobegdaet dage lva', '2016-04-10T18:34:51.464+00:00', 2, '21+', '142',
+            'Dobro pobegdaet zlo', 'tt0468569')
         </sql>
     </changeSet>
 

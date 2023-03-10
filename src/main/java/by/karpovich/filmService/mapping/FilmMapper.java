@@ -14,6 +14,7 @@ import by.karpovich.filmService.jpa.repository.DirectorRepository;
 import by.karpovich.filmService.jpa.repository.GenreRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
+import by.karpovich.filmService.utils.IMDB;
 import by.karpovich.filmService.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,7 @@ public class FilmMapper {
         FileUploadDownloadUtil.saveFile(resulFileName, file);
 
         model.setName(dto.getName());
+        model.setNameFilmFromImdb(dto.getNameFilmFromImdb());
         model.setPoster(resulFileName);
         model.setRatingIMDB(dto.getRatingIMDB());
         model.setTagline(dto.getTagline());
@@ -71,7 +73,7 @@ public class FilmMapper {
 
         dto.setName(model.getName());
         dto.setPoster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()));
-        dto.setRatingIMDB(model.getRatingIMDB());
+        dto.setRatingIMDB(IMDB.getRating(model.getNameFilmFromImdb()));
         dto.setTagline(model.getTagline());
         dto.setReleaseDate(Utils.mapStringFromInstant(model.getReleaseDate()));
         dto.setCountryName(model.getCountry().getName());

@@ -1,7 +1,5 @@
 package by.karpovich.filmService.jpa.model;
 
-import by.karpovich.filmService.utils.Constant;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,11 +29,14 @@ public class FilmModel {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "name_movie_imdb", nullable = false)
+    private String nameFilmFromImdb;
+
     @Column(name = "poster")
     private String poster;
 
     @Column(name = "rating_IMDB", nullable = false)
-    private Double ratingIMDB;
+    private String ratingIMDB;
 
     @Column(name = "tag_line", nullable = false)
     private String tagline;

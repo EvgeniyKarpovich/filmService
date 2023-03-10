@@ -10,7 +10,7 @@
             CREATE TABLE FILMS(
             id serial PRIMARY KEY,
             name varchar(200) NOT NULL,
-            rating_IMDB float NOT NULL,
+            rating_IMDB varchar NOT NULL,
             tag_line varchar(50) NOT NULL,
             release_date timestamp WITH time ZONE DEFAULT CURRENT_DATE,
             country_id integer NOT NULL,
@@ -29,6 +29,13 @@
         <sql>
             ALTER TABLE FILMS
             ADD poster varchar(200);
+        </sql>
+    </changeSet>
+
+    <changeSet id="films-3" author="karpovich.e">
+        <sql>
+            ALTER TABLE FILMS
+            ADD name_movie_imdb varchar(200) NOT NULL;
         </sql>
     </changeSet>
 </databaseChangeLog>
