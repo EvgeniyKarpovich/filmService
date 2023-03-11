@@ -73,7 +73,7 @@ public class FilmMapper {
 
         dto.setName(model.getName());
         dto.setPoster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()));
-        dto.setRatingIMDB(IMDB.getRating(model.getNameFilmFromImdb()));
+        dto.setRatingIMDB(IMDB.getRatingIMDB(model.getNameFilmFromImdb()));
         dto.setTagline(model.getTagline());
         dto.setReleaseDate(Utils.mapStringFromInstant(model.getReleaseDate()));
         dto.setCountryName(model.getCountry().getName());
