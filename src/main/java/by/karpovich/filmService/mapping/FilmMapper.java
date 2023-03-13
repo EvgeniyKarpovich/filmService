@@ -16,7 +16,7 @@ import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.IMDB;
 import by.karpovich.filmService.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,16 +26,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class FilmMapper {
 
-    @Autowired
-    private CountryService countryService;
-    @Autowired
-    private DirectorRepository directorRepository;
-    @Autowired
-    private ActorRepository actorRepository;
-    @Autowired
-    private GenreRepository genreRepository;
+    private final CountryService countryService;
+    private final DirectorRepository directorRepository;
+    private final ActorRepository actorRepository;
+    private final GenreRepository genreRepository;
 
     public FilmModel mapModelFromDto(FilmDtoForSaveUpdate dto, MultipartFile file) {
         if (dto == null) {

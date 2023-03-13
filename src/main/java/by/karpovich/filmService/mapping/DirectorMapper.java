@@ -8,7 +8,7 @@ import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,14 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class DirectorMapper {
 
-    @Autowired
-    private CountryService countryService;
-    @Autowired
-    private FilmRepository filmRepository;
-    @Autowired
-    private FilmMapper filmMapper;
+    private final CountryService countryService;
+    private final FilmRepository filmRepository;
+    private final FilmMapper filmMapper;
 
     public DirectorDtoForFindAll mapDirectorDtoForFindAllFromModel(DirectorModel model) {
         if (model == null) {

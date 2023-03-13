@@ -3,17 +3,17 @@ package by.karpovich.filmService.api.controller;
 import by.karpovich.filmService.api.dto.genreDto.GenreDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.genreDto.GenreOutDto;
 import by.karpovich.filmService.service.GenresService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/genres")
+@RequiredArgsConstructor
 public class GenreController {
 
-    @Autowired
-    private GenresService genresService;
+    private final GenresService genresService;
 
     @GetMapping("/{id}")
     public GenreOutDto findById(@PathVariable("id") Long id) {

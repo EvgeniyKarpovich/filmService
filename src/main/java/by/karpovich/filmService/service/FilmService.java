@@ -11,8 +11,8 @@ import by.karpovich.filmService.jpa.model.FilmModel;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.jpa.specification.FilmSpecificationUtils;
 import by.karpovich.filmService.mapping.FilmMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,27 +26,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Service
-@Transactional
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class FilmService {
 
-    @Autowired
-    private FilmRepository filmRepository;
-    @Autowired
-    private FilmMapper filmMapper;
+    private final FilmRepository filmRepository;
+    private final FilmMapper filmMapper;
 
     public FilmOutDto findById(Long id) {
         Optional<FilmModel> model = filmRepository.findById(id);
 
         FilmModel filmModel = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the film with id = %s not found", model.get().getId())));
+                () -> new NotFoundModelException(String.format("the film with id = %s not found", id)));
 
         log.info("method findById - the film found with id = {} ", filmModel.getId());
 
         return filmMapper.mapFilmOutDtoFromFilmModel(filmModel);
     }
 
+    @Transactional
     public FilmWithPosterDto save(FilmDtoForSaveUpdate dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
@@ -58,6 +57,7 @@ public class FilmService {
         return filmMapper.mapDtoWithImageFromModel(save);
     }
 
+    @Transactional
     public FilmWithPosterDto update(FilmDtoForSaveUpdate dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
@@ -70,6 +70,7 @@ public class FilmService {
         return filmMapper.mapDtoWithImageFromModel(updatedModel);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (filmRepository.findById(id).isPresent()) {
             filmRepository.deleteById(id);
@@ -211,7 +212,7 @@ public class FilmService {
     private void validateAlreadyExists(FilmDtoForSaveUpdate dto, Long id) {
         Optional<FilmModel> filmModel = filmRepository.findByNameAndDescription(dto.getName(), dto.getDescription());
         if (filmModel.isPresent() && !filmModel.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the film with id = %s already exist", filmModel.get().getId()));
+            throw new DuplicateException(String.format("the film with id = %s already exist", id));
         }
     }
 }

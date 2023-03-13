@@ -4,11 +4,12 @@ import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.api.dto.filmDto.FilmDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.filmDto.FilmOutDto;
 import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
+import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.service.FilmService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +18,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/films")
+@RequiredArgsConstructor
 public class FilmController {
 
-    @Autowired
-    private FilmService filmService;
+    private final FilmService filmService;
+    private final FilmRepository filmRepository;
 
     @GetMapping("/{id}")
     public FilmOutDto findById(@PathVariable("id") Long id) {
@@ -39,6 +41,11 @@ public class FilmController {
                                        @RequestParam(defaultValue = "20") int size) {
         return filmService.findAll(page, size);
     }
+
+//    @GetMapping("/date")
+//    public List<FilmModel> findByReleaseDate() {
+//        return filmRepository.findAllByOrderByReleaseDateDesc();
+//    }
 
     @GetMapping("/filmsByName/{name}")
     public Map<String, Object> findAllByName(@RequestParam("name") String name,

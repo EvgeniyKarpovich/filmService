@@ -9,8 +9,8 @@ import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.ActorModel;
 import by.karpovich.filmService.jpa.repository.ActorRepository;
 import by.karpovich.filmService.mapping.ActorMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,27 +24,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Service
-@Transactional
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class ActorService {
 
-    @Autowired
-    private ActorRepository actorRepository;
-    @Autowired
-    private ActorMapper actorMapper;
+    private final ActorRepository actorRepository;
+    private final ActorMapper actorMapper;
 
     public ActorDtoOut findById(Long id) {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         ActorModel actorModel = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the actor with id = %s not found", model.get().getId())));
+                () -> new NotFoundModelException(String.format("the actor with id = %s not found", id)));
 
         log.info("method findById - the actor found with id = {} ", actorModel.getId());
 
         return actorMapper.mapActorOutDtoFromActorModel(actorModel);
     }
 
+    @Transactional
     public ActorDtoWithAvatar save(ActorDtoForSaveUpdate dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
@@ -75,6 +74,7 @@ public class ActorService {
         return response;
     }
 
+    @Transactional
     public ActorDtoWithAvatar update(ActorDtoForSaveUpdate dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
@@ -87,6 +87,7 @@ public class ActorService {
         return actorMapper.mapDtoWithImageFromModel(save);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (actorRepository.findById(id).isPresent()) {
             actorRepository.deleteById(id);
@@ -119,7 +120,7 @@ public class ActorService {
         Optional<ActorModel> model = actorRepository.findByName(dto.getName());
 
         if (model.isPresent() && !model.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the actor with name = %s already exist", model.get().getName()));
+            throw new DuplicateException(String.format("the actor with name = %s already exist", dto.getName()));
         }
     }
 }

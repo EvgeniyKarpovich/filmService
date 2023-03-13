@@ -6,9 +6,8 @@ import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.CountryModel;
 import by.karpovich.filmService.jpa.repository.CountryRepository;
 import by.karpovich.filmService.mapping.CountryMapper;
-import by.karpovich.filmService.utils.IMDB;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,16 +15,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
-@Transactional
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class CountryService {
 
-    @Autowired
-    private CountryRepository countryRepository;
-    @Autowired
-    private CountryMapper countryMapper;
+    private final CountryRepository countryRepository;
+    private final CountryMapper countryMapper;
 
+    @Transactional
     public CountryDto save(CountryDto dto) {
         validateAlreadyExists(dto, null);
 
@@ -40,7 +38,7 @@ public class CountryService {
     public CountryDto findById(Long id) {
         Optional<CountryModel> model = countryRepository.findById(id);
         CountryModel country = model.orElseThrow(
-                () -> new NotFoundModelException(String.format("the country with id = %s not found", model.get().getId())));
+                () -> new NotFoundModelException(String.format("the country with id = %s not found", id)));
 
         log.info("method findById - the country found with id = {} ", country.getId());
         return countryMapper.mapDtoFromModel(country);
@@ -54,6 +52,7 @@ public class CountryService {
         return countryMapper.mapListDtoFromListModel(countries);
     }
 
+    @Transactional
     public CountryDto update(Long id, CountryDto dto) {
         validateAlreadyExists(dto, id);
 
@@ -66,6 +65,7 @@ public class CountryService {
         return countryMapper.mapDtoFromModel(updated);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (countryRepository.findById(id).isPresent()) {
             countryRepository.deleteById(id);

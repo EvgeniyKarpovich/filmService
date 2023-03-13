@@ -8,8 +8,8 @@ import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.DirectorModel;
 import by.karpovich.filmService.jpa.repository.DirectorRepository;
 import by.karpovich.filmService.mapping.DirectorMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,26 +23,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Service
-@Transactional
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class DirectorService {
 
-    @Autowired
-    private DirectorRepository directorRepository;
-    @Autowired
-    private DirectorMapper directorMapper;
+    private final DirectorRepository directorRepository;
+    private final DirectorMapper directorMapper;
 
     public DirectorDtoWithAvatar findById(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
         DirectorModel model = directorModel.orElseThrow(
-                () -> new NotFoundModelException(String.format("the director with id = %s not found", directorModel.get().getId())));
+                () -> new NotFoundModelException(String.format("the director with id = %s not found", id)));
 
         log.info("method findById - the director found with id = {} ", model.getId());
 
         return directorMapper.mapDtoWithImageFromModel(model);
     }
 
+    @Transactional
     public DirectorDtoWithAvatar save(DirectorDtoForSaveUpdate dto, MultipartFile file) {
         validateAlreadyExists(dto, null);
 
@@ -73,6 +72,7 @@ public class DirectorService {
         return response;
     }
 
+    @Transactional
     public DirectorDtoWithAvatar update(DirectorDtoForSaveUpdate dto, Long id, MultipartFile file) {
         validateAlreadyExists(dto, id);
 
@@ -85,6 +85,7 @@ public class DirectorService {
         return directorMapper.mapDtoWithImageFromModel(update);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         if (directorRepository.findById(id).isPresent()) {
             directorRepository.deleteById(id);
@@ -98,7 +99,7 @@ public class DirectorService {
         Optional<DirectorModel> directorModel = directorRepository.findByName(dto.getName());
 
         if (directorModel.isPresent() && !directorModel.get().getId().equals(id)) {
-            throw new DuplicateException(String.format("the director with name = %s already exist", directorModel.get().getName()));
+            throw new DuplicateException(String.format("the director with name = %s already exist", dto.getName()));
         }
     }
 }

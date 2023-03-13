@@ -4,19 +4,18 @@ import by.karpovich.filmService.api.dto.genreDto.GenreDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.genreDto.GenreOutDto;
 import by.karpovich.filmService.jpa.model.GenreModel;
 import by.karpovich.filmService.jpa.repository.FilmRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class GenreMapper {
 
-    @Autowired
-    private FilmMapper filmMapper;
-    @Autowired
-    private FilmRepository filmRepository;
+    private final FilmMapper filmMapper;
+    private final FilmRepository filmRepository;
 
     public GenreOutDto mapDtoFromModel(GenreModel model) {
         if (model == null) {

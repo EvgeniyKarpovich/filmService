@@ -18,7 +18,11 @@ public interface FilmRepository extends JpaRepository<FilmModel, Long>,
 
     Optional<FilmModel> findByNameAndDescription(String name, String description);
 
+    Page<FilmModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
     Page<FilmModel> findAll(Pageable pageable);
+
+//    List<FilmModel> findAllByOrderByReleaseDateDesc();
 
     Page<FilmModel> findByGenresId(Long genreId, Pageable pageable);
 
@@ -33,6 +37,4 @@ public interface FilmRepository extends JpaRepository<FilmModel, Long>,
     Page<FilmModel> findByCountryId(Long countryId, Pageable pageable);
 
     Page<FilmModel> findByDirectorsId(Long countryId, Pageable pageable);
-
-    Page<FilmModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

@@ -7,6 +7,7 @@ import by.karpovich.filmService.exception.NotFoundModelException;
 import by.karpovich.filmService.jpa.model.GenreModel;
 import by.karpovich.filmService.jpa.repository.GenreRepository;
 import by.karpovich.filmService.mapping.GenreMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-@Transactional
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class GenresService {
 
-    @Autowired
-    private GenreRepository genreRepository;
-    @Autowired
-    private GenreMapper genreMapper;
+    private final GenreRepository genreRepository;
+    private final GenreMapper genreMapper;
 
     public GenreOutDto findById(Long id) {
         Optional<GenreModel> model = genreRepository.findById(id);

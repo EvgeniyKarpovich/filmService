@@ -6,6 +6,7 @@ import by.karpovich.filmService.service.DirectorService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/directors")
+@RequiredArgsConstructor
 public class DirectorController {
 
-    @Autowired
-    private DirectorService directorService;
+    private final DirectorService directorService;
 
     @GetMapping("/{id}")
     public DirectorDtoWithAvatar findById(@PathVariable("id") Long id) {

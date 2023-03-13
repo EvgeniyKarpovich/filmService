@@ -7,7 +7,7 @@ import by.karpovich.filmService.service.ActorService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,10 +16,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/actors")
+@RequiredArgsConstructor
 public class ActorController {
 
-    @Autowired
-    private ActorService actorService;
+    private final ActorService actorService;
 
     @GetMapping("/{id}")
     public ActorDtoOut findById(@PathVariable("id") Long id) {

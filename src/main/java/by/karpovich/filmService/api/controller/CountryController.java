@@ -2,6 +2,7 @@ package by.karpovich.filmService.api.controller;
 
 import by.karpovich.filmService.api.dto.countryDto.CountryDto;
 import by.karpovich.filmService.service.CountryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,10 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/countries")
+@RequiredArgsConstructor
 public class CountryController {
 
-    @Autowired
-    private CountryService countryService;
+    private final CountryService countryService;
 
     @GetMapping("/{id}")
     public CountryDto findById(@PathVariable("id") Long id) {
