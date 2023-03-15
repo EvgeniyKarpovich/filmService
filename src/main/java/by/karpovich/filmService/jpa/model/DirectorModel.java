@@ -2,10 +2,7 @@ package by.karpovich.filmService.jpa.model;
 
 import by.karpovich.filmService.jpa.converters.CareerForModelConverter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,7 +15,9 @@ import java.util.List;
 @Table(name = "directors")
 @Getter
 @Setter
+@Builder
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(exclude = "films")
 @AllArgsConstructor
 @NoArgsConstructor
 public class DirectorModel {
@@ -42,9 +41,12 @@ public class DirectorModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
-    private CountryModel placeOfBirth;
+    private CountryModel country;
 
-    @ManyToMany(mappedBy = "directors", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "director_film",
+            joinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"))
     private List<FilmModel> films = new ArrayList<>();
 
     @CreatedDate

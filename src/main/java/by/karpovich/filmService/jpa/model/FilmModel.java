@@ -1,10 +1,7 @@
 package by.karpovich.filmService.jpa.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,11 +12,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "films")
+@EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(exclude = {"directors", "genres", "actors"})
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class FilmModel {
 
     @Id
@@ -45,17 +44,17 @@ public class FilmModel {
     private Instant releaseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
+    @JoinColumn(name = "country_id")
     private CountryModel country;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "director_film",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "director_id", referencedColumnName = "id"))
     private List<DirectorModel> directors;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "genre_film",
+    @ManyToMany
+    @JoinTable(name = "GENRE_FILM",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"))
     private List<GenreModel> genres;
@@ -66,7 +65,7 @@ public class FilmModel {
     @Column(name = "duration_in_minutes", nullable = false)
     private int durationInMinutes;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "actor_film",
             joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"))

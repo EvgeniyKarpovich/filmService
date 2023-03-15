@@ -1,10 +1,7 @@
 package by.karpovich.filmService.jpa.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,7 +14,9 @@ import java.util.List;
 @Table(name = "genres")
 @Getter
 @Setter
+@Builder
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(exclude = "films")
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenreModel {
@@ -29,7 +28,10 @@ public class GenreModel {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "GENRE_FILM",
+            joinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"))
     private List<FilmModel> films = new ArrayList<>();
 
     @CreatedDate

@@ -2,21 +2,17 @@ package by.karpovich.filmService.api.dto.actorDto;
 
 import by.karpovich.filmService.api.dto.filmDto.FilmDtoForFindAll;
 import by.karpovich.filmService.jpa.model.Career;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActorDtoWithAvatar {
-
-    private Long id;
 
     private String name;
 
@@ -26,7 +22,7 @@ public class ActorDtoWithAvatar {
 
     private String dateOfBirth;
 
-    private Long placeOfBirth;
+    private String placeOfBirth;
 
     private Integer height;
 

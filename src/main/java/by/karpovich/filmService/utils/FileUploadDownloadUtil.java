@@ -14,8 +14,7 @@ import java.util.UUID;
 
 public class FileUploadDownloadUtil {
 
-    public static void saveFile(String fileName,
-                                MultipartFile file) {
+    public static String saveFile(MultipartFile file) {
 
         Path uploadPath = Paths.get(Constant.UPLOAD_PATH);
 
@@ -27,17 +26,17 @@ public class FileUploadDownloadUtil {
             }
         }
 
+        String uuidFile = UUID.randomUUID().toString();
+        String name = uuidFile + "-" + file.getOriginalFilename();
+
         try (InputStream inputStream = file.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
+            Path filePath = uploadPath.resolve(name);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    public static String generationFileName(MultipartFile file) {
-        String uuidFile = UUID.randomUUID().toString();
-        return uuidFile + "-" + file.getOriginalFilename();
+        return name;
     }
 
     public static byte[] getImageAsResponseEntity(String fileName) {

@@ -4,6 +4,8 @@ import by.karpovich.filmService.api.dto.countryDto.CountryDto;
 import by.karpovich.filmService.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +39,10 @@ public class CountryController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         countryService.deleteById(id);
+
+        return new ResponseEntity<>("Country successfully deleted", HttpStatus.OK);
     }
 
     @GetMapping("/name/{name}")

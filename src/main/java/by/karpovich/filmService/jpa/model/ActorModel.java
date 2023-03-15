@@ -2,10 +2,7 @@ package by.karpovich.filmService.jpa.model;
 
 import by.karpovich.filmService.jpa.converters.CareerForModelConverter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,7 +15,9 @@ import java.util.List;
 @Table(name = "actors")
 @Getter
 @Setter
+@Builder
 @EntityListeners(AuditingEntityListener.class)
+@EqualsAndHashCode(exclude = "films")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActorModel {
@@ -37,8 +36,8 @@ public class ActorModel {
     private Instant dateOfBirth;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id", nullable = false)
-    private CountryModel placeOfBirth;
+    @JoinColumn(name = "country_id")
+    private CountryModel country;
 
     @Column(name = "careers")
     @Convert(converter = CareerForModelConverter.class)
@@ -47,7 +46,10 @@ public class ActorModel {
     @Column(name = "height")
     private Integer height;
 
-    @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(name = "actor_film",
+            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id", referencedColumnName = "id"))
     private List<FilmModel> films = new ArrayList<>();
 
     @CreatedDate

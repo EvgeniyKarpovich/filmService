@@ -4,13 +4,14 @@ import by.karpovich.filmService.api.dto.criteriaDto.FilmDtoCriteria;
 import by.karpovich.filmService.api.dto.filmDto.FilmDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.filmDto.FilmOutDto;
 import by.karpovich.filmService.api.dto.filmDto.FilmWithPosterDto;
-import by.karpovich.filmService.jpa.repository.FilmRepository;
 import by.karpovich.filmService.service.FilmService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +23,6 @@ import java.util.Map;
 public class FilmController {
 
     private final FilmService filmService;
-    private final FilmRepository filmRepository;
 
     @GetMapping("/{id}")
     public FilmOutDto findById(@PathVariable("id") Long id) {
@@ -97,7 +97,9 @@ public class FilmController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         filmService.deleteById(id);
+
+        return new ResponseEntity<>("Film successfully deleted", HttpStatus.OK);
     }
 }

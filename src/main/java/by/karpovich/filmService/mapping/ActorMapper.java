@@ -5,7 +5,7 @@ import by.karpovich.filmService.api.dto.actorDto.ActorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoOut;
 import by.karpovich.filmService.api.dto.actorDto.ActorDtoWithAvatar;
 import by.karpovich.filmService.jpa.model.ActorModel;
-import by.karpovich.filmService.jpa.repository.FilmRepository;
+import by.karpovich.filmService.jpa.repository.FilmRepositoryForMapper;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.Utils;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ActorMapper {
 
     private final CountryService countryService;
-    private final FilmRepository filmRepository;
+    private final FilmRepositoryForMapper filmRepositoryForMapper;
     private final FilmMapper filmMapper;
 
     public ActorDtoOut mapActorOutDtoFromActorModel(ActorModel model) {
@@ -29,17 +29,14 @@ public class ActorMapper {
             return null;
         }
 
-        ActorDtoOut dto = new ActorDtoOut();
-
-        dto.setName(model.getName());
-        dto.setProfessions(model.getCareers());
-        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
-        dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(model.getPlaceOfBirth().getName());
-        dto.setHeight(model.getHeight());
-        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByActorsId(model.getId())));
-
-        return dto;
+        return ActorDtoOut.builder()
+                .name(model.getName())
+                .professions(model.getCareers())
+                .avatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()))
+                .dateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()))
+                .placeOfBirth(model.getCountry().getName())
+                .height(model.getHeight())
+                .build();
     }
 
     public ActorDtoForFindAll mapActorDtoForFindAllFromActorModel(ActorModel model) {
@@ -47,12 +44,10 @@ public class ActorMapper {
             return null;
         }
 
-        ActorDtoForFindAll dto = new ActorDtoForFindAll();
-
-        dto.setName(model.getName());
-        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
-
-        return dto;
+        return ActorDtoForFindAll.builder()
+                .name(model.getName())
+                .avatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()))
+                .build();
     }
 
     public List<ActorDtoForFindAll> mapListDtoForFindAllFromListActors(List<ActorModel> models) {
@@ -61,7 +56,6 @@ public class ActorMapper {
         }
 
         List<ActorDtoForFindAll> actorsDto = new ArrayList<>();
-
         for (ActorModel model : models) {
             actorsDto.add(mapActorDtoForFindAllFromActorModel(model));
         }
@@ -74,19 +68,14 @@ public class ActorMapper {
             return null;
         }
 
-        ActorModel model = new ActorModel();
-
-        String resulFileName = FileUploadDownloadUtil.generationFileName(file);
-        FileUploadDownloadUtil.saveFile(resulFileName, file);
-
-        model.setName(dto.getName());
-        model.setCareers(dto.getCareers());
-        model.setAvatar(resulFileName);
-        model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
-        model.setPlaceOfBirth(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
-        model.setHeight(dto.getHeight());
-
-        return model;
+        return ActorModel.builder()
+                .name(dto.getName())
+                .avatar(FileUploadDownloadUtil.saveFile(file))
+                .dateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()))
+                .country(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()))
+                .careers(dto.getCareers())
+                .height(dto.getHeight())
+                .build();
     }
 
     public ActorDtoWithAvatar mapDtoWithImageFromModel(ActorModel model) {
@@ -94,17 +83,14 @@ public class ActorMapper {
             return null;
         }
 
-        ActorDtoWithAvatar dto = new ActorDtoWithAvatar();
-
-        dto.setId(model.getId());
-        dto.setName(model.getName());
-        dto.setCareers(model.getCareers());
-        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
-        dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(model.getPlaceOfBirth().getId());
-        dto.setHeight(model.getHeight());
-        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByActorsId(model.getId())));
-
-        return dto;
+        return ActorDtoWithAvatar.builder()
+                .name(model.getName())
+                .careers(model.getCareers())
+                .avatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()))
+                .dateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()))
+                .placeOfBirth(model.getCountry().getName())
+                .height(model.getHeight())
+                .films(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepositoryForMapper.findByActorsId(model.getId())))
+                .build();
     }
 }

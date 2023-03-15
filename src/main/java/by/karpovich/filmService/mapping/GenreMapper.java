@@ -3,7 +3,7 @@ package by.karpovich.filmService.mapping;
 import by.karpovich.filmService.api.dto.genreDto.GenreDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.genreDto.GenreOutDto;
 import by.karpovich.filmService.jpa.model.GenreModel;
-import by.karpovich.filmService.jpa.repository.FilmRepository;
+import by.karpovich.filmService.jpa.repository.FilmRepositoryForMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,19 +15,17 @@ import java.util.List;
 public class GenreMapper {
 
     private final FilmMapper filmMapper;
-    private final FilmRepository filmRepository;
+    private final FilmRepositoryForMapper filmRepositoryForMapper;
 
     public GenreOutDto mapDtoFromModel(GenreModel model) {
         if (model == null) {
             return null;
         }
 
-        GenreOutDto dto = new GenreOutDto();
-
-        dto.setName(model.getName());
-        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByGenresId(model.getId())));
-
-        return dto;
+        return GenreOutDto.builder()
+                .name(model.getName())
+                .films(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepositoryForMapper.findByGenresId(model.getId())))
+                .build();
     }
 
     public GenreModel mapModelFromDto(GenreDtoForSaveUpdate dto) {
@@ -35,11 +33,9 @@ public class GenreMapper {
             return null;
         }
 
-        GenreModel model = new GenreModel();
-
-        model.setName(dto.getName());
-
-        return model;
+        return GenreModel.builder()
+                .name(dto.getName())
+                .build();
     }
 
     public List<GenreOutDto> mapListDtoFromListModel(List<GenreModel> modelList) {

@@ -3,16 +3,14 @@ package by.karpovich.filmService.api.dto.directorDto;
 import by.karpovich.filmService.api.dto.filmDto.FilmDtoForFindAll;
 import by.karpovich.filmService.jpa.model.Career;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class DirectorDtoWithAvatar {

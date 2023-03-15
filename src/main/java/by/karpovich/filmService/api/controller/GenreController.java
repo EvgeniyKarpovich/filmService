@@ -4,6 +4,8 @@ import by.karpovich.filmService.api.dto.genreDto.GenreDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.genreDto.GenreOutDto;
 import by.karpovich.filmService.service.GenresService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,7 +39,9 @@ public class GenreController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         genresService.deleteById(id);
+
+        return new ResponseEntity<>("Genre successfully deleted", HttpStatus.OK);
     }
 }

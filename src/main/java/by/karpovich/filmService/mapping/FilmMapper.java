@@ -41,12 +41,9 @@ public class FilmMapper {
 
         FilmModel model = new FilmModel();
 
-        String resulFileName = FileUploadDownloadUtil.generationFileName(file);
-        FileUploadDownloadUtil.saveFile(resulFileName, file);
-
         model.setName(dto.getName());
         model.setNameFilmFromImdb(dto.getNameFilmFromImdb());
-        model.setPoster(resulFileName);
+        model.setPoster(FileUploadDownloadUtil.saveFile(file));
         model.setRatingIMDB(dto.getRatingIMDB());
         model.setTagline(dto.getTagline());
         model.setReleaseDate(Utils.mapInstantFromString(dto.getReleaseDate()));
@@ -132,7 +129,6 @@ public class FilmMapper {
 
         FilmWithPosterDto dto = new FilmWithPosterDto();
 
-        dto.setId(model.getId());
         dto.setName(model.getName());
         dto.setPoster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()));
         dto.setRatingIMDB(model.getRatingIMDB());
@@ -218,20 +214,20 @@ public class FilmMapper {
         Optional<GenreModel> genreModel = genreRepository.findById(id);
 
         return genreModel.orElseThrow(
-                () -> new NotFoundModelException("the genre with id = " + genreModel.get().getId() + " not found"));
+                () -> new NotFoundModelException("the genre with id = " + id + " not found"));
     }
 
     private DirectorModel findDirectorByIdWhichWillReturnModel(Long id) {
         Optional<DirectorModel> directorModel = directorRepository.findById(id);
 
         return directorModel.orElseThrow(
-                () -> new NotFoundModelException("the director with id = " + directorModel.get().getId() + " not found"));
+                () -> new NotFoundModelException("the director with id = " + id + " not found"));
     }
 
     private ActorModel findActorByIdWhichWillReturnModel(Long id) {
         Optional<ActorModel> model = actorRepository.findById(id);
 
         return model.orElseThrow(
-                () -> new NotFoundModelException("the actor with id = " + model.get().getId() + " not found"));
+                () -> new NotFoundModelException("the actor with id = " + id + " not found"));
     }
 }

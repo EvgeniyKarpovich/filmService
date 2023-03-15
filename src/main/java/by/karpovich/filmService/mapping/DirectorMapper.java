@@ -4,7 +4,7 @@ import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForFindAll;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoForSaveUpdate;
 import by.karpovich.filmService.api.dto.directorDto.DirectorDtoWithAvatar;
 import by.karpovich.filmService.jpa.model.DirectorModel;
-import by.karpovich.filmService.jpa.repository.FilmRepository;
+import by.karpovich.filmService.jpa.repository.FilmRepositoryForMapper;
 import by.karpovich.filmService.service.CountryService;
 import by.karpovich.filmService.utils.FileUploadDownloadUtil;
 import by.karpovich.filmService.utils.Utils;
@@ -20,7 +20,7 @@ import java.util.List;
 public class DirectorMapper {
 
     private final CountryService countryService;
-    private final FilmRepository filmRepository;
+    private final FilmRepositoryForMapper filmRepositoryForMapper;
     private final FilmMapper filmMapper;
 
     public DirectorDtoForFindAll mapDirectorDtoForFindAllFromModel(DirectorModel model) {
@@ -28,12 +28,10 @@ public class DirectorMapper {
             return null;
         }
 
-        DirectorDtoForFindAll dto = new DirectorDtoForFindAll();
-
-        dto.setName(model.getName());
-        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
-
-        return dto;
+        return DirectorDtoForFindAll.builder()
+                .name(model.getName())
+                .avatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()))
+                .build();
     }
 
     public List<DirectorDtoForFindAll> mapListDirectorDtoForFindAllFromListModels(List<DirectorModel> models) {
@@ -54,18 +52,13 @@ public class DirectorMapper {
             return null;
         }
 
-        DirectorModel model = new DirectorModel();
-
-        String resulFileName = FileUploadDownloadUtil.generationFileName(file);
-        FileUploadDownloadUtil.saveFile(resulFileName, file);
-
-        model.setName(dto.getName());
-        model.setCareers(dto.getCareers());
-        model.setAvatar(resulFileName);
-        model.setDateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()));
-        model.setPlaceOfBirth(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()));
-
-        return model;
+        return DirectorModel.builder()
+                .name(dto.getName())
+                .careers(dto.getCareers())
+                .avatar(FileUploadDownloadUtil.saveFile(file))
+                .dateOfBirth(Utils.mapInstantFromString(dto.getDateOfBirth()))
+                .country(countryService.findCountryByIdWhichWillReturnModel(dto.getPlaceOfBirth()))
+                .build();
     }
 
     public DirectorDtoWithAvatar mapDtoWithImageFromModel(DirectorModel model) {
@@ -73,15 +66,13 @@ public class DirectorMapper {
             return null;
         }
 
-        DirectorDtoWithAvatar dto = new DirectorDtoWithAvatar();
-
-        dto.setName(model.getName());
-        dto.setCareers(model.getCareers());
-        dto.setAvatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()));
-        dto.setDateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()));
-        dto.setPlaceOfBirth(model.getPlaceOfBirth().getName());
-        dto.setFilms(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepository.findByDirectorsId(model.getId())));
-
-        return dto;
+        return DirectorDtoWithAvatar.builder()
+                .name(model.getName())
+                .careers(model.getCareers())
+                .avatar(FileUploadDownloadUtil.getImageAsResponseEntity(model.getAvatar()))
+                .dateOfBirth(Utils.mapStringFromInstant(model.getDateOfBirth()))
+                .placeOfBirth(model.getCountry().getName())
+                .films(filmMapper.mapListFilmDtoForFindAllFromFilmModels(filmRepositoryForMapper.findByDirectorsId(model.getId())))
+                .build();
     }
 }

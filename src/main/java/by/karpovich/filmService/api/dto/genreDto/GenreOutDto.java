@@ -1,16 +1,14 @@
 package by.karpovich.filmService.api.dto.genreDto;
 
 import by.karpovich.filmService.api.dto.filmDto.FilmDtoForFindAll;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenreOutDto {
