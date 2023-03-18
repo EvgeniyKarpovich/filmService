@@ -23,7 +23,11 @@ public class DirectorController {
 
     private final DirectorService directorService;
 
-    @GetMapping("/{id}")
+    private static final String FIND_BY_ID = "/{id}";
+    private static final String UPDATE_BY_ID = "/{id}";
+    private static final String DELETE_BY_ID = "/{id}";
+
+    @GetMapping(FIND_BY_ID)
     public DirectorDtoWithAvatar findById(@PathVariable("id") Long id) {
         return directorService.findById(id);
     }
@@ -41,14 +45,14 @@ public class DirectorController {
         return directorService.findAll(page, size);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = UPDATE_BY_ID, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public DirectorDtoWithAvatar update(@Valid @RequestPart(value = "dto")
                                         @Parameter(schema = @Schema(type = "string", format = "binary")) DirectorDtoForSaveUpdate dto,
                                         @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         return directorService.update(dto, id, file);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(DELETE_BY_ID)
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         directorService.deleteById(id);
 

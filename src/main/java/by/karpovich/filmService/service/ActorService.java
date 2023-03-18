@@ -39,7 +39,6 @@ public class ActorService {
                 () -> new NotFoundModelException(String.format("the actor with id = %s not found", id)));
 
         log.info("method findById - the actor found with id = {} ", actorModel.getId());
-
         return actorMapper.mapActorOutDtoFromActorModel(actorModel);
     }
 
@@ -51,7 +50,6 @@ public class ActorService {
         ActorModel save = actorRepository.save(model);
 
         log.info("method save - the actor with name = {} saved", save.getName());
-
         return actorMapper.mapDtoWithImageFromModel(save);
     }
 
@@ -70,7 +68,6 @@ public class ActorService {
         response.put("totalPages", actorModelPage.getTotalPages());
 
         log.info("method findAll - the number of actors = {}", actorDtoList.size());
-
         return response;
     }
 
@@ -83,7 +80,6 @@ public class ActorService {
         ActorModel save = actorRepository.save(model);
 
         log.info("method update - the actor with id = {} updated", save.getId());
-
         return actorMapper.mapDtoWithImageFromModel(save);
     }
 

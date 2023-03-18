@@ -41,7 +41,6 @@ public class FilmService {
                 () -> new NotFoundModelException(String.format("the film with id = %s not found", id)));
 
         log.info("method findById - the film found with id = {} ", filmModel.getId());
-
         return filmMapper.mapFilmOutDtoFromFilmModel(filmModel);
     }
 
@@ -53,7 +52,6 @@ public class FilmService {
         FilmModel save = filmRepository.save(filmModel);
 
         log.info("method save - the film with name {} saved", save.getName());
-
         return filmMapper.mapDtoWithImageFromModel(save);
     }
 
@@ -66,7 +64,6 @@ public class FilmService {
         FilmModel updatedModel = filmRepository.save(filmModel);
 
         log.info("method update - the film with id =  {} updated", updatedModel.getId());
-
         return filmMapper.mapDtoWithImageFromModel(updatedModel);
     }
 
@@ -95,7 +92,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findAll - the number of films = {}", filmDtoList.size());
-
         return response;
     }
 
@@ -114,7 +110,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findAllByCriteria  - the number of films  = {}", filmDtoList.size());
-
         return response;
     }
 
@@ -132,7 +127,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findAllFilmsByGenreId  - the number of films by genre = {}", filmDtoList.size());
-
         return response;
     }
 
@@ -150,7 +144,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findAllFilmsByActorId  - the number of films by actor = {}", filmDtoList.size());
-
         return response;
     }
 
@@ -168,7 +161,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findByCountryId  - the number of films by country = {}", filmDtoList.size());
-
         return response;
     }
 
@@ -186,7 +178,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findAllFilmsByDirectorId  - the number of films by director = {}", filmDtoList.size());
-
         return response;
     }
 
@@ -205,7 +196,6 @@ public class FilmService {
         response.put("totalPages", filmModelPageModelPage.getTotalPages());
 
         log.info("method findFilmsByName  - the number of films = {}", filmDtoList.size());
-
         return response;
     }
 

@@ -31,7 +31,6 @@ public class CountryService {
         CountryModel savedCountry = countryRepository.save(entity);
 
         log.info("method save - the country with name {} saved", savedCountry.getName());
-
         return countryMapper.mapDtoFromModel(savedCountry);
     }
 
@@ -48,7 +47,6 @@ public class CountryService {
         List<CountryModel> countries = countryRepository.findAll();
 
         log.info("method findAll - the number of countries found  = {} ", countries.size());
-
         return countryMapper.mapListDtoFromListModel(countries);
     }
 
@@ -61,7 +59,6 @@ public class CountryService {
         CountryModel updated = countryRepository.save(country);
 
         log.info("method update - the country {} updated", updated.getName());
-
         return countryMapper.mapDtoFromModel(updated);
     }
 
@@ -87,7 +84,6 @@ public class CountryService {
         List<CountryModel> countriesFilterByName = findByNameCountry(countryModels, name);
 
         log.info("method findByName - the number of countries found = {} ", countriesFilterByName.size());
-
         return countryMapper.mapListDtoFromListModel(countriesFilterByName);
     }
 

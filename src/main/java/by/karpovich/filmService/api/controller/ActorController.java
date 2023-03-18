@@ -23,7 +23,12 @@ public class ActorController {
 
     private final ActorService actorService;
 
-    @GetMapping("/{id}")
+    private static final String FIND_BY_ID = "/{id}";
+    private static final String UPDATE_BY_ID = "/{id}";
+    private static final String DELETE_BY_ID = "/{id}";
+    private static final String FIND_BY_NAME = "/name/{name}";
+
+    @GetMapping(FIND_BY_ID)
     public ActorDtoOut findById(@PathVariable("id") Long id) {
         return actorService.findById(id);
     }
@@ -41,21 +46,21 @@ public class ActorController {
         return actorService.findAll(page, size);
     }
 
-    @GetMapping("/actorsByName/{name}")
+    @GetMapping(FIND_BY_NAME)
     public Map<String, Object> findAllByName(@RequestParam("name") String name,
                                              @RequestParam(defaultValue = "0") int page,
                                              @RequestParam(defaultValue = "20") int size) {
         return actorService.findActorsByName(name, page, size);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = UPDATE_BY_ID, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ActorDtoWithAvatar update(@Valid @RequestPart(value = "dto")
                                      @Parameter(schema = @Schema(type = "string", format = "binary")) ActorDtoForSaveUpdate dto,
                                      @PathVariable("id") Long id, @RequestPart MultipartFile file) {
         return actorService.update(dto, id, file);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(DELETE_BY_ID)
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         actorService.deleteById(id);
 

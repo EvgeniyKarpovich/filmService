@@ -39,23 +39,21 @@ public class FilmMapper {
             return null;
         }
 
-        FilmModel model = new FilmModel();
-
-        model.setName(dto.getName());
-        model.setNameFilmFromImdb(dto.getNameFilmFromImdb());
-        model.setPoster(FileUploadDownloadUtil.saveFile(file));
-        model.setRatingIMDB(dto.getRatingIMDB());
-        model.setTagline(dto.getTagline());
-        model.setReleaseDate(Utils.mapInstantFromString(dto.getReleaseDate()));
-        model.setCountry(countryService.findCountryByIdWhichWillReturnModel(dto.getCountryId()));
-        model.setDirectors(findDirectorModelsByDirectorId(dto.getDirectorsId()));
-        model.setGenres(findGenreModelsByGenreId(dto.getGenresId()));
-        model.setAgeLimit(dto.getAgeLimit());
-        model.setDurationInMinutes(dto.getDurationInMinutes());
-        model.setActors(findActorModelsByActorId(dto.getActorsId()));
-        model.setDescription(dto.getDescription());
-
-        return model;
+        return FilmModel.builder()
+                .name(dto.getName())
+                .nameFilmFromImdb(dto.getNameFilmFromImdb())
+                .poster(FileUploadDownloadUtil.saveFile(file))
+                .ratingIMDB(dto.getRatingIMDB())
+                .tagline(dto.getTagline())
+                .releaseDate(Utils.mapInstantFromString(dto.getReleaseDate()))
+                .country(countryService.findCountryByIdWhichWillReturnModel(dto.getCountryId()))
+                .directors(findDirectorModelsByDirectorId(dto.getDirectorsId()))
+                .genres(findGenreModelsByGenreId(dto.getGenresId()))
+                .ageLimit(dto.getAgeLimit())
+                .durationInMinutes(dto.getDurationInMinutes())
+                .actors(findActorModelsByActorId(dto.getActorsId()))
+                .description(dto.getDescription())
+                .build();
     }
 
     public FilmOutDto mapFilmOutDtoFromFilmModel(FilmModel model) {
@@ -63,22 +61,20 @@ public class FilmMapper {
             return null;
         }
 
-        FilmOutDto dto = new FilmOutDto();
-
-        dto.setName(model.getName());
-        dto.setPoster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()));
-        dto.setRatingIMDB(IMDB.getRatingIMDB(model.getNameFilmFromImdb()));
-        dto.setTagline(model.getTagline());
-        dto.setReleaseDate(Utils.mapStringFromInstant(model.getReleaseDate()));
-        dto.setCountryName(model.getCountry().getName());
-        dto.setDirectorsName(findDirectorsNameFromFilmModel(model));
-        dto.setGenresName(findGenresNameFromFilmModel(model));
-        dto.setAgeLimit(model.getAgeLimit());
-        dto.setDurationInMinutes(model.getDurationInMinutes());
-        dto.setActorsName(findActorsNameFromFilmModel(model));
-        dto.setDescription(model.getDescription());
-
-        return dto;
+        return FilmOutDto.builder()
+                .name(model.getName())
+                .poster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()))
+                .ratingIMDB(IMDB.getRatingIMDB(model.getNameFilmFromImdb()))
+                .tagline(model.getTagline())
+                .releaseDate(Utils.mapStringFromInstant(model.getReleaseDate()))
+                .countryName(model.getCountry().getName())
+                .directorsName(findDirectorsNameFromFilmModel(model))
+                .genresName(findGenresNameFromFilmModel(model))
+                .ageLimit(model.getAgeLimit())
+                .durationInMinutes(model.getDurationInMinutes())
+                .actorsName(findActorsNameFromFilmModel(model))
+                .description(model.getDescription())
+                .build();
     }
 
     public FilmDtoForFindAll mapFilmDtoForFindAllFromFilmModel(FilmModel model) {
@@ -86,26 +82,23 @@ public class FilmMapper {
             return null;
         }
 
-        FilmDtoForFindAll dto = new FilmDtoForFindAll();
-
-        dto.setName(model.getName());
-        dto.setPoster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()));
-        dto.setYear(Utils.mapStringFromInstant(model.getReleaseDate()));
-        dto.setCountry(model.getCountry().getName());
-        dto.setGenre(findFirstGenreNameFromFilmModel(model));
-
-        return dto;
+        return FilmDtoForFindAll.builder()
+                .name(model.getName())
+                .poster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()))
+                .year(Utils.mapStringFromInstant(model.getReleaseDate()))
+                .country(model.getCountry().getName())
+                .genre(findFirstGenreNameFromFilmModel(model))
+                .build();
     }
 
     public List<DirectorModel> findDirectorModelsByDirectorId(List<Long> listDirectorsId) {
-        List<DirectorModel> directorModels = new ArrayList<>();
-
-        for (Long id : listDirectorsId) {
-            DirectorModel directorModel = findDirectorByIdWhichWillReturnModel(id);
-            directorModels.add(directorModel);
+        if (listDirectorsId == null) {
+            return null;
         }
 
-        return directorModels;
+        return listDirectorsId.stream()
+                .map(this::findDirectorByIdWhichWillReturnModel)
+                .toList();
     }
 
     public List<FilmDtoForFindAll> mapListFilmDtoForFindAllFromFilmModels(List<FilmModel> films) {
@@ -113,13 +106,9 @@ public class FilmMapper {
             return null;
         }
 
-        List<FilmDtoForFindAll> dtoFilms = new ArrayList<>();
-
-        for (FilmModel model : films) {
-            dtoFilms.add(mapFilmDtoForFindAllFromFilmModel(model));
-        }
-
-        return dtoFilms;
+        return films.stream()
+                .map(this::mapFilmDtoForFindAllFromFilmModel)
+                .toList();
     }
 
     public FilmWithPosterDto mapDtoWithImageFromModel(FilmModel model) {
@@ -127,22 +116,20 @@ public class FilmMapper {
             return null;
         }
 
-        FilmWithPosterDto dto = new FilmWithPosterDto();
-
-        dto.setName(model.getName());
-        dto.setPoster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()));
-        dto.setRatingIMDB(model.getRatingIMDB());
-        dto.setTagline(model.getTagline());
-        dto.setReleaseDate(Utils.mapStringFromInstant(model.getReleaseDate()));
-        dto.setCountryId(model.getCountry().getId());
-        dto.setDirectorsId(findDirectorsIdFromFilmModel(model));
-        dto.setGenresId(findGenresIdFromFilmModel(model.getGenres()));
-        dto.setAgeLimit(model.getAgeLimit());
-        dto.setDurationInMinutes(model.getDurationInMinutes());
-        dto.setActorsId(findActorsIdFromFilmModel(model));
-        dto.setDescription(model.getDescription());
-
-        return dto;
+        return FilmWithPosterDto.builder()
+                .name(model.getName())
+                .poster(FileUploadDownloadUtil.getImageAsResponseEntity(model.getPoster()))
+                .ratingIMDB(model.getRatingIMDB())
+                .tagline(model.getTagline())
+                .releaseDate(Utils.mapStringFromInstant(model.getReleaseDate()))
+                .countryId(model.getCountry().getId())
+                .directorsId(findDirectorsIdFromFilmModel(model))
+                .genresId(findGenresIdFromFilmModel(model.getGenres()))
+                .ageLimit(model.getAgeLimit())
+                .durationInMinutes(model.getDurationInMinutes())
+                .actorsId(findActorsIdFromFilmModel(model))
+                .description(model.getDescription())
+                .build();
     }
 
     private List<Long> findActorsIdFromFilmModel(FilmModel filmModel) {

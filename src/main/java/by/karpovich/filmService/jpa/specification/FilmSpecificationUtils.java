@@ -19,16 +19,13 @@ public class FilmSpecificationUtils {
 
     public static Specification<FilmModel> findByRating(String rating) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("ratingIMDB"), rating);
-
     }
 
-    public static Specification<FilmModel> findByDate(String date) {
-        String startDate = date + "-01-01T00:00:00.000+00:00";
-        String endDate = date + "-12-31T00:00:00.000+00:00";
+    public static Specification<FilmModel> findByDate(String year) {
+        var startDate = Instant.parse(year + "-01-01T00:00:00.000+00:00");
+        var endDate = Instant.parse(year + "-12-31T00:00:00.000+00:00");
 
-        Instant parseStart = Instant.parse(startDate);
-        Instant parseEnd = Instant.parse(endDate);
-        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("releaseDate"), parseStart, parseEnd);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("releaseDate"), startDate, endDate);
     }
 
     public static Specification<FilmModel> defaultSpecification() {

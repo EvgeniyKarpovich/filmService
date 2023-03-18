@@ -3,7 +3,6 @@ package by.karpovich.filmService.api.controller;
 import by.karpovich.filmService.api.dto.countryDto.CountryDto;
 import by.karpovich.filmService.service.CountryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,12 @@ public class CountryController {
 
     private final CountryService countryService;
 
-    @GetMapping("/{id}")
+    private static final String FIND_BY_ID = "/{id}";
+    private static final String UPDATE_BY_ID = "/{id}";
+    private static final String DELETE_BY_ID = "/{id}";
+    private static final String FIND_BY_NAME = "/name/{name}";
+
+    @GetMapping(FIND_BY_ID)
     public CountryDto findById(@PathVariable("id") Long id) {
         return countryService.findById(id);
     }
@@ -32,13 +36,13 @@ public class CountryController {
         return countryService.save(dto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(UPDATE_BY_ID)
     public CountryDto update(@RequestBody CountryDto dto,
                              @PathVariable("id") Long id) {
         return countryService.update(id, dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(DELETE_BY_ID)
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         countryService.deleteById(id);
 

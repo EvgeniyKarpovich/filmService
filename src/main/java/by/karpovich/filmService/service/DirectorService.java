@@ -37,7 +37,6 @@ public class DirectorService {
                 () -> new NotFoundModelException(String.format("the director with id = %s not found", id)));
 
         log.info("method findById - the director found with id = {} ", model.getId());
-
         return directorMapper.mapDtoWithImageFromModel(model);
     }
 
@@ -49,7 +48,6 @@ public class DirectorService {
         DirectorModel save = directorRepository.save(model);
 
         log.info("method save - the director with name {} saved", save.getName());
-
         return directorMapper.mapDtoWithImageFromModel(save);
     }
 
@@ -68,7 +66,6 @@ public class DirectorService {
         response.put("totalPages", directorModelPage.getTotalPages());
 
         log.info("method save - the number of directors  found {} ", directorDtoWithAvatars.size());
-
         return response;
     }
 
@@ -81,7 +78,6 @@ public class DirectorService {
         DirectorModel update = directorRepository.save(model);
 
         log.info("method update - the director with id = {} updated", update.getId());
-
         return directorMapper.mapDtoWithImageFromModel(update);
     }
 

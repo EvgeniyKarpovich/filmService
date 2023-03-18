@@ -9,9 +9,7 @@ import by.karpovich.filmService.jpa.repository.GenreRepository;
 import by.karpovich.filmService.mapping.GenreMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +28,6 @@ public class GenresService {
                 () -> new NotFoundModelException(String.format("the genre with id = %s not found", model.get().getId())));
 
         log.info("method findById - the genre found with id = {} ", genresModel.getId());
-
         return genreMapper.mapDtoFromModel(genresModel);
     }
 
@@ -41,7 +38,6 @@ public class GenresService {
         GenreModel savedModel = genreRepository.save(model);
 
         log.info("method save - the genre with name {} saved", savedModel.getName());
-
         return genreMapper.mapDtoFromModel(savedModel);
     }
 
@@ -49,7 +45,6 @@ public class GenresService {
         List<GenreModel> genres = genreRepository.findAll();
 
         log.info("method findAll - the genres found {} ", genres.size());
-
         return genreMapper.mapListDtoFromListModel(genres);
     }
 
@@ -61,7 +56,6 @@ public class GenresService {
         GenreModel save = genreRepository.save(model);
 
         log.info("method update - the genre with id = {} updated", save.getId());
-
         return genreMapper.mapDtoFromModel(save);
     }
 

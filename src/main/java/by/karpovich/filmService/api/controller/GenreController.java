@@ -17,7 +17,11 @@ public class GenreController {
 
     private final GenresService genresService;
 
-    @GetMapping("/{id}")
+    private static final String FIND_BY_ID = "/{id}";
+    private static final String UPDATE_BY_ID = "/{id}";
+    private static final String DELETE_BY_ID = "/{id}";
+
+    @GetMapping(FIND_BY_ID)
     public GenreOutDto findById(@PathVariable("id") Long id) {
         return genresService.findById(id);
     }
@@ -32,13 +36,13 @@ public class GenreController {
         return genresService.findAll();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(UPDATE_BY_ID)
     public GenreOutDto update(@RequestBody GenreDtoForSaveUpdate dto,
                               @PathVariable("id") Long id) {
         return genresService.update(dto, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(DELETE_BY_ID)
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
         genresService.deleteById(id);
 
